@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 2.5,
-          "height": 3.5,
-          "width": 3.5
+          "drill": 2.2,
+          "height": 4.4,
+          "width": 4.4
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -58,7 +58,13 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "silk_over_copper|24276356|66912500|ca1c6bf6-3bd0-4cce-a1e7-f6219ab2370e|00000000-0000-0000-0000-000000000000",
+        "silk_over_copper|24538644|70412500|275cae0a-954d-4e2f-b89f-9bb24f362fd6|00000000-0000-0000-0000-000000000000",
+        "silk_over_copper|29540800|32693600|af46763c-bcf3-4c40-9e8a-32dfb79a8773|00000000-0000-0000-0000-000000000000",
+        "silk_over_copper|61099500|32346500|3bae3056-1108-4747-aa37-95308314a03c|00000000-0000-0000-0000-000000000000",
+        "silk_over_copper|61099500|64096500|7c027173-3ea3-496f-9ce4-e5103f31e5a1|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "version": 2
       },
@@ -116,10 +122,10 @@
       },
       "rules": {
         "max_error": 0.005,
-        "min_clearance": 0.2,
+        "min_clearance": 0.3,
         "min_connection": 0.0,
         "min_copper_edge_clearance": 0.2,
-        "min_hole_clearance": 0.2,
+        "min_hole_clearance": 0.3,
         "min_hole_to_hole": 0.25,
         "min_microvia_diameter": 0.2,
         "min_microvia_drill": 0.1,
@@ -129,7 +135,7 @@
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
         "min_track_width": 0.75,
-        "min_via_annular_width": 0.1,
+        "min_via_annular_width": 0.3,
         "min_via_diameter": 0.0,
         "solder_mask_to_copper_clearance": 0.0,
         "use_height_for_length_calcs": true
