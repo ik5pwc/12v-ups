@@ -1332,7 +1332,7 @@
 		(descr "JST EH series connector, B3B-EH-A (http://www.jst-mfg.com/product/pdf/eng/eEH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST EH vertical")
 		(property "Reference" "J4"
-			(at 8.85 0 360)
+			(at 8.85 0 0)
 			(layer "F.SilkS")
 			(uuid "a21dd8ef-62da-4784-942c-cae89bc49a82")
 			(effects
@@ -1343,7 +1343,7 @@
 			)
 		)
 		(property "Value" "ENABLE"
-			(at 2.5 3.4 360)
+			(at 2.5 3.4 0)
 			(layer "F.Fab")
 			(uuid "8f978cfd-bbc6-4331-9683-618a4138489b")
 			(effects
@@ -1648,7 +1648,7 @@
 			(uuid "02c83312-a7b5-47b4-b39b-6cc847edce47")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 2.5 1.5 360)
+			(at 2.5 1.5 0)
 			(layer "F.Fab")
 			(uuid "d2b4b7b3-14b9-44ea-8444-5ba3fa07ff98")
 			(effects
@@ -1726,7 +1726,7 @@
 		(descr "TO-220-2, Vertical, RM 5.08mm, see https://www.centralsemi.com/PDFS/CASE/TO-220-2PD.PDF")
 		(tags "TO-220-2 Vertical RM 5.08mm")
 		(property "Reference" "D1"
-			(at 2.54 -4.27 360)
+			(at 2.54 -4.27 0)
 			(layer "F.SilkS")
 			(uuid "adfefa55-b3bd-40c4-9d36-b3dd55d3a65b")
 			(effects
@@ -1737,7 +1737,7 @@
 			)
 		)
 		(property "Value" "BYW19"
-			(at 2.54 2.5 360)
+			(at 2.54 2.5 0)
 			(layer "F.Fab")
 			(uuid "6643a7e1-634a-4fd2-a587-89d3344e933d")
 			(effects
@@ -1748,7 +1748,7 @@
 			)
 		)
 		(property "Footprint" "Package_TO_SOT_THT:TO-220-2_Vertical"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "0344d7ee-849e-4896-8678-5cf7c3bb1f35")
@@ -1760,7 +1760,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "f2086bd7-6f7f-447a-b6ef-a6a1d996f2b4")
@@ -1772,7 +1772,7 @@
 			)
 		)
 		(property "Description" "Diode, filled shape"
-			(at 0 0 360)
+			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "e17c7333-36d8-4cf5-9f97-7a9e31528c15")
@@ -1995,7 +1995,7 @@
 			(uuid "4eab1b03-91ac-4e98-80d8-d4eee3b29585")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 2.54 -4.27 360)
+			(at 2.54 -4.27 0)
 			(layer "F.Fab")
 			(uuid "ef09f208-946f-4c85-9840-97ff658690f1")
 			(effects
@@ -2701,7 +2701,7 @@
 			)
 		)
 		(property "Value" "BATTERY"
-			(at 12.57 8.01 360)
+			(at 12.57 8.01 0)
 			(layer "F.Fab")
 			(uuid "373a7300-a237-446c-9bc8-9322856e4425")
 			(effects
@@ -3246,7 +3246,7 @@
 			)
 		)
 		(property "Value" "10K"
-			(at 1 3.5 360)
+			(at 1 3.5 0)
 			(layer "F.Fab")
 			(uuid "4a1224ac-1f2f-4384-8770-f78088d5fd63")
 			(effects
@@ -3435,7 +3435,7 @@
 			(uuid "b7ae173c-f9cb-4e06-94f4-f3abb20f609a")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 2.5 0 360)
+			(at 2.5 0 0)
 			(layer "F.Fab")
 			(uuid "6d6fdc9d-0be8-44ae-8bc2-006b4f7febf7")
 			(effects

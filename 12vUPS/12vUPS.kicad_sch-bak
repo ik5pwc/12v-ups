@@ -3277,16 +3277,6 @@
 		)
 		(uuid "4ee27206-6257-4b9a-9048-bc3fb33efb87")
 	)
-	(label "A2"
-		(at 144.78 88.9 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "80e809c4-73ee-4f70-a9a2-470c4f743e90")
-	)
 	(label "ENA"
 		(at 93.98 99.06 0)
 		(effects
@@ -3316,16 +3306,6 @@
 			(justify right bottom)
 		)
 		(uuid "dd703ee5-9b69-4580-9024-43cb48464429")
-	)
-	(label "A1"
-		(at 128.27 88.9 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "df6cbde6-cab9-413f-b2a9-09bfc44041d1")
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")

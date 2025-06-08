@@ -1,4 +1,4 @@
-24547048018092305
+24547048019088997
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -57863,8 +57863,8 @@ heatsink
 0
 IK5PWC
 30CPF04
-
-
+TO-247-3, Vertical, RM 5.45mm, see https://toshiba.semicon-storage.com/us/product/mosfet/to-247-4l.html
+TO-247-3 Vertical RM 5.45mm
 0
 3
 2
