@@ -467,7 +467,9 @@
   },
   "libraries": {
     "pinned_footprint_libs": [],
-    "pinned_symbol_libs": []
+    "pinned_symbol_libs": [
+      "IK5PWC"
+    ]
   },
   "meta": {
     "filename": "12vUPS.kicad_pro",
