@@ -1370,7 +1370,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "IK5PWC:D_Ideal"
+		(symbol "IK5PWC:D_Ideal_no_gnd"
 			(pin_numbers
 				(hide yes)
 			)
@@ -1460,7 +1460,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "D_Ideal_0_1"
+			(symbol "D_Ideal_no_gnd_0_1"
 				(rectangle
 					(start -2.54 2.54)
 					(end 2.54 -2.54)
@@ -1509,7 +1509,7 @@
 					)
 				)
 			)
-			(symbol "D_Ideal_1_1"
+			(symbol "D_Ideal_no_gnd_1_1"
 				(pin passive line
 					(at -3.81 0 0)
 					(length 2.54)
@@ -1521,24 +1521,6 @@
 						)
 					)
 					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 0 -5.08 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3308,16 +3290,6 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 71.12) (xy 105.41 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8c8535c3-95c4-48b7-a312-74eaae535790")
-	)
-	(wire
-		(pts
 			(xy 170.18 85.09) (xy 170.18 96.52)
 		)
 		(stroke
@@ -3485,16 +3457,6 @@
 			(type default)
 		)
 		(uuid "ea0739da-242a-4b9b-8c7e-7eb894c807ff")
-	)
-	(wire
-		(pts
-			(xy 105.41 78.74) (xy 95.25 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "eb6e85cc-f7dd-47c8-a8c3-fd39d4a93de9")
 	)
 	(wire
 		(pts
@@ -4658,7 +4620,7 @@
 		)
 	)
 	(symbol
-		(lib_id "IK5PWC:D_Ideal")
+		(lib_id "IK5PWC:D_Ideal_no_gnd")
 		(at 105.41 66.04 0)
 		(mirror y)
 		(unit 1)
@@ -4685,7 +4647,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "IK5PWC:D_IDEAL_with_GND"
+		(property "Footprint" "IK5PWC:D_IDEAL_no_GND"
 			(at 105.41 66.04 0)
 			(effects
 				(font
@@ -4735,9 +4697,6 @@
 		)
 		(pin "2"
 			(uuid "4b94f769-4524-4408-a531-cff0dda5c6ce")
-		)
-		(pin "3"
-			(uuid "35d6e469-61b4-4cc4-bb3a-115bc6bd54ca")
 		)
 		(instances
 			(project ""
