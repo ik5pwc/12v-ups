@@ -361,9 +361,7 @@
 	(footprint "IK5PWC:D_IDEAL_no_GND"
 		(layer "F.Cu")
 		(uuid "22121040-5a83-47f6-8f34-f90572c705d3")
-		(at 70.2175 49.2525)
-		(descr "terminal block Metz Connect Type703_RT10N02HGLU, 2 pins, pitch 9.52mm, size 19x12.5mm^2, drill diamater 1.3mm, pad diameter 2.6mm, see http://www.metz-connect.com/de/system/files/productfiles/Datenblatt_317031_RT10NxxHGLU_OFF-022897S.pdf, script-generated using https://github.com/pointhi/kicad-footprint-generator/scripts/TerminalBlock_MetzConnect")
-		(tags "THT terminal block Metz Connect Type703_RT10N02HGLU pitch 9.52mm size 19x12.5mm^2 drill 1.3mm pad 2.6mm")
+		(at 67.4375 52.8925 180)
 		(property "Reference" "D7"
 			(at 9.5 6.95 0)
 			(layer "F.SilkS")
@@ -387,7 +385,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 4.32 25.08 0)
+			(at 4.32 25.08 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
@@ -400,7 +398,7 @@
 			)
 		)
 		(property "Description" "Diode"
-			(at 4.32 25.08 0)
+			(at 4.32 25.08 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
@@ -413,7 +411,7 @@
 			)
 		)
 		(property "Sim.Device" "D"
-			(at 0 0 0)
+			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
@@ -426,7 +424,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A 3=GND"
-			(at 0 0 0)
+			(at 0 0 180)
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
@@ -444,16 +442,6 @@
 		(sheetfile "12vUPS.kicad_sch")
 		(attr through_hole)
 		(fp_line
-			(start -3.91 1.77)
-			(end 1.06 1.77)
-			(stroke
-				(width 0.5)
-				(type solid)
-			)
-			(layer "F.SilkS")
-			(uuid "70d5449d-6eb7-4598-9863-d922e2f8df2a")
-		)
-		(fp_line
 			(start -0.195 -0.18)
 			(end -0.18 3.83)
 			(stroke
@@ -461,7 +449,17 @@
 				(type solid)
 			)
 			(layer "F.SilkS")
-			(uuid "01b3dc8c-98e9-4f63-9327-647c1e07778b")
+			(uuid "c459324a-e02f-4efd-9290-394ebb01aea0")
+		)
+		(fp_line
+			(start -3.91 1.77)
+			(end 1.06 1.77)
+			(stroke
+				(width 0.5)
+				(type solid)
+			)
+			(layer "F.SilkS")
+			(uuid "91d9a5bc-cb86-4936-8ba5-b8df524cc810")
 		)
 		(fp_rect
 			(start -9.88 -3.15)
@@ -472,7 +470,7 @@
 			)
 			(fill no)
 			(layer "F.SilkS")
-			(uuid "81e89613-13d9-477b-ac8a-1921abc09fc5")
+			(uuid "dd6ad1fc-dd7b-45f9-adaf-95223d91afe6")
 		)
 		(fp_poly
 			(pts
@@ -484,7 +482,7 @@
 			)
 			(fill yes)
 			(layer "F.SilkS")
-			(uuid "a28f07d8-7345-473e-b98f-a46c4aaf5118")
+			(uuid "5fed0ce8-7779-4a95-b375-404f8e024d4d")
 		)
 		(fp_rect
 			(start -9.98 -3.25)
@@ -495,7 +493,7 @@
 			)
 			(fill no)
 			(layer "F.CrtYd")
-			(uuid "d8cd9303-3893-4088-8edd-455152a79953")
+			(uuid "d64f14cd-af56-420e-a4b7-afb401ca56b3")
 		)
 		(fp_text user "${REFERENCE}"
 			(at -0.95 8.42 0)
@@ -509,7 +507,7 @@
 			)
 		)
 		(pad "1" thru_hole rect
-			(at -8.07 5.05)
+			(at 5.3 5.04 180)
 			(size 3.5 3.5)
 			(drill 2)
 			(layers "*.Cu" "*.Mask")
@@ -520,7 +518,7 @@
 			(uuid "36c82aa2-fb16-42c5-97b0-ed6eb7e29a58")
 		)
 		(pad "1" thru_hole rect
-			(at -8.06 -1.34)
+			(at 5.32 -1.35 180)
 			(size 3.5 3.5)
 			(drill 2)
 			(layers "*.Cu" "*.Mask")
@@ -531,7 +529,7 @@
 			(uuid "36c82aa2-fb16-42c5-97b0-ed6eb7e29a58")
 		)
 		(pad "2" thru_hole rect
-			(at 5.3 5.04)
+			(at -8.07 5.05 180)
 			(size 3.5 3.5)
 			(drill 2)
 			(layers "*.Cu" "*.Mask")
@@ -542,7 +540,7 @@
 			(uuid "da059188-49ac-4ecd-b490-7254591bc7f4")
 		)
 		(pad "2" thru_hole rect
-			(at 5.32 -1.35)
+			(at -8.06 -1.34 180)
 			(size 3.5 3.5)
 			(drill 2)
 			(layers "*.Cu" "*.Mask")
@@ -553,9 +551,9 @@
 			(uuid "da059188-49ac-4ecd-b490-7254591bc7f4")
 		)
 		(group ""
-			(uuid "158fcc37-824f-4e03-a5c8-dd234043b317")
-			(members "01b3dc8c-98e9-4f63-9327-647c1e07778b" "70d5449d-6eb7-4598-9863-d922e2f8df2a"
-				"a28f07d8-7345-473e-b98f-a46c4aaf5118"
+			(uuid "b1e058a0-ed96-4901-9f7e-284ba04df0f8")
+			(members "5fed0ce8-7779-4a95-b375-404f8e024d4d" "91d9a5bc-cb86-4936-8ba5-b8df524cc810"
+				"c459324a-e02f-4efd-9290-394ebb01aea0"
 			)
 		)
 		(embedded_fonts no)
@@ -1426,7 +1424,7 @@
 		(property "Reference" "D1"
 			(at 7.62 -3.72 90)
 			(layer "F.SilkS")
-			(uuid "8b479b79-6522-4e44-950d-1c658a2894cb")
+			(uuid "9e1e1156-772d-4bbe-87cf-d85434f81854")
 			(effects
 				(font
 					(size 1 1)
@@ -1437,7 +1435,7 @@
 		(property "Value" "SF30GG"
 			(at 7.62 3.72 90)
 			(layer "F.Fab")
-			(uuid "3a2759d2-9f7b-4ce4-b025-e44777dff234")
+			(uuid "cb263cf7-4739-414b-87ed-8dba2f9e3029")
 			(effects
 				(font
 					(size 1 1)
@@ -1449,7 +1447,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "811db667-4b90-48ad-8e9d-29f12643390f")
+			(uuid "45665786-9889-4fe2-8b92-00213ab14b77")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -1461,7 +1459,7 @@
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "9d5107b0-42ab-4884-99a0-bcee0cb9ffe2")
+			(uuid "49e66077-1798-4531-a4eb-008a6b3f32a4")
 			(effects
 				(font
 					(size 1.27 1.27)
