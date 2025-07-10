@@ -21,9 +21,11 @@
 #include <Ethernet.h>
 
 
-#define DHCP_TIMER_SEC 300   // Seconds after renew or rebind is tried
+#define DHCP_TIMER_SEC 30   // Seconds after renew or rebind is tried
 
 /* -------- Public functions --------- */
 void init_network(network_t *net);
+void manage_network(network_t *net);
+void manage_netserver();
 
 #endif /* NETWORK_H_ */

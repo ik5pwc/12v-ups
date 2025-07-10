@@ -44,10 +44,11 @@ void setup(){
 
 // The loop function is called in an endless loop
 void loop(){
-Serial.print(g_netstatus.ip[0]);Serial.print(".");
-Serial.print(g_netstatus.ip[1]); Serial.print(".");
-Serial.print(g_netstatus.ip[2]); Serial.print(".");
-Serial.println(g_netstatus.ip[3]);
+
+	// If dynamic address is in use, renew or try to get a new one
+	if (g_netstatus.dhcp) {manage_network(&g_netstatus);}
+
+  manage_netserver();
 
 //	 Ethernet.maintain();
 

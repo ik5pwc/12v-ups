@@ -23,6 +23,20 @@
  * ----------------------------------------------------------------------------------------------------------------
 */
 
+enum dhcp_status_t : uint8_t {
+  manual     = 0xA0,
+  dynamic    = 0xA2,
+	assigned   = 0xA4,
+	fallback   = 0xA8
+};
+
+
+
+
+
+
+
+
 // Enum for controller state machine
 enum operate_states_t : uint8_t {
   oper_auto      = 0xA0,     // Antenna selection driven by CAT
@@ -85,7 +99,7 @@ struct network_t {
   uint8_t     mask[4] = {0,0,0,0};      // Static or failback subnet mask
   uint8_t     gw[4]   = {0,0,0,0};      // Static or failback gateway
   uint8_t     mac[6]  = {0,0,0,0};      // Device mac address (computer on startup)
-  bool           dhcp = false;          // DHCP Enabled?
+  dhcp_status_t  dhcp = dynamic;        // Track how the address was assigned
   uint16_t dhcp_timer = 0 ;             // DHCP Timer for rebind/renew
 };
 

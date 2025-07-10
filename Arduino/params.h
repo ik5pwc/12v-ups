@@ -36,6 +36,15 @@ const uint8_t static_mask[] = {255,255,255,100};    // Subnet mask - used also a
 const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as failback if DHCP is unavailable
 
 
+// Define where server will listen
+#define PORT 23
+
+
+
+
+
+
+
 
 
 // How many antenna to switch (max 9 due to BCD coding)
