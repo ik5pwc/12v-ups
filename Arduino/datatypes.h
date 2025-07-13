@@ -103,6 +103,22 @@ struct network_t {
   uint16_t dhcp_timer = 0 ;             // DHCP Timer for rebind/renew
 };
 
+struct dc_out_t {
+
+	float m1_iout = 11.345;
+	float m1_ibat = 12.345;
+	float m1_vbat = 13.345;
+	float m2_iout = 14.6530;
+	float m2_ibat = 11.34440;
+	float m2_vbat = 12.3450;
+	float m3_iout = 4.567;
+	float m3_ibat = 1.03;
+	float m3_vbat = 30;
+	float dc_vout = 0;
+
+};
+
+
 // Structure for controller configuration
 
 //struct settings_t {                                  /*  Description                     */
@@ -154,7 +170,7 @@ struct hamband_t {
  *                                    CONSTs (BAND DEFINITION)
  * ----------------------------------------------------------------------------------------------------------------
 */
-
+/*
 // constant array containing band definition
 // Add or remove rows based on BANDS_COUNT macro defined in params.h
 const hamband_t  hambands[HAM_BANDS +1] PROGMEM = {
@@ -172,6 +188,6 @@ const hamband_t  hambands[HAM_BANDS +1] PROGMEM = {
   {.meters = 4  , .f_start = 70100,  .f_end = 70300  },   // 4M
   {.meters = 2  , .f_start = 144000, .f_end = 146000 }    // 2M
 };
-
+*/
 // end of define guard
 #endif

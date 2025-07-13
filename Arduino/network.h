@@ -20,12 +20,12 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-
-#define DHCP_TIMER_SEC 30   // Seconds after renew or rebind is tried
+#define DHCP_TIMER_SEC 30     // Seconds after renew or rebind is tried
+#define REFRESH_INTERVAL 5    // After often send update data to connected clients
 
 /* -------- Public functions --------- */
 void init_network(network_t *net);
-void manage_network(network_t *net);
-void manage_netserver();
+void manage_ip(network_t *net);
+void manage_netserver(dc_out_t *dc);
 
 #endif /* NETWORK_H_ */

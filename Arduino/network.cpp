@@ -13,9 +13,14 @@
 
 
 /* ------- private global variables -------- */
-static EthernetServer g_netserver = EthernetServer(PORT);
-static EthernetClient g_client[4];
-static void print_status(EthernetClient *clt);
+static EthernetServer g_netserver = EthernetServer(PORT);     // Ethernet telnet server
+static char g_reply[275];                                     // Telnet reply
+
+
+/* ---- Static functions (i.e. callable only within this file) ----- */
+static void build_reply (dc_out_t *dc);
+static void append (char str[],uint16_t *pos);
+
 
 /*----------------------------------------------------------------------------------------------------------------------
  * Function: init_network
@@ -48,16 +53,11 @@ static void print_status(EthernetClient *clt);
 */
 void init_network(network_t *net) {
 
-	// Copy static value as default ones
-/*	memcpy(net->ip  ,static_ip  ,sizeof net->ip);
-	memcpy(net->mask,static_mask,sizeof net->mask);
-	memcpy(net->gw  ,static_gw  ,sizeof net->gw);
-*/
 	// Compute the MAC Address from static IP
 	net->mac[3] = static_ip[0]; net->mac[4] = static_ip[1];
 	net->mac[5] = static_ip[2]; net->mac[6] = static_ip[3];
 
-	// Configure
+	// Configure DHCP or static
 	if (ENABLE_DHCP) {net->dhcp = dynamic;} else {net->dhcp = manual;}
 
 	// try to get IP from DHCP
@@ -90,7 +90,7 @@ void init_network(network_t *net) {
 
 
 /*----------------------------------------------------------------------------------------------------------------------
- * Function: manage_network
+ * Function: manage_ip
  * -------------------------------
  * Perform DHCP renew or reset to fallback address
  *
@@ -101,10 +101,7 @@ void init_network(network_t *net) {
  *
  * Global Const Used: NONE
  *
- * Global variables used: NONE
- *  . static_ip         (params.h)
- *  . static_mask       (params.h)
- *  . static_gw         (params.h)
+ * Global variables used:
  *
  * Pre Processor Macro:
  *  . DHCP_TIMER_SEC    (network.h)
@@ -117,7 +114,7 @@ void init_network(network_t *net) {
  * Arguments:
  * . *net: pointer to a network_t struct containing current network config
 */
-void manage_network(network_t *net) {
+void manage_ip(network_t *net) {
   uint8_t ret = 0;    // Return value for renew or discover function
 
 	// Update DHCP Timer
@@ -166,15 +163,43 @@ void manage_network(network_t *net) {
 
 
 
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: manage_netserver
+ * -------------------------------
+ * Send data to connected clients
+ *
+ * Invoked by:
+ * . loop               (UPSMonitor.ino)
+ *
+ * Called Sub/Functions:
+ * . build_reply        (network.cpp)
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used:
+ *  . g_netserver       (network.cpp)
+ *  . g_reply           (network.cpp)
+ *
+ * Pre Processor Macro:
+ * . REFRESH_INTERVAL   (network.h)
+ *
+ * Struct:
+ *  . network_t         (datatypes.h)
+ *  . dc_out_t          (datatypes.h)
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+ * . *dc: pointer to adc_out_t struct containing electric measures
+*/
+void manage_netserver(dc_out_t* dc) {
+  char rx_buffer[50];                           // Buffer for data sent by client
 
+  bool close_conn = false;                      // If set to true disconnect client
+  static uint8_t timer = REFRESH_INTERVAL ;     // Timer for sending data to client
 
-void manage_netserver() {
-  char rx_buffer[50];                // Store data sent from client
-	bool close_conn = false,        // If set to true disconnect client
-			    send_status = false;       // if set to true, status data is sent
-
-  static uint8_t timer = 0;
-  uint8_t now = 0;
+	// Update Last sent timer
+	if ( (millis() / 1000 ) % 2 == timer % 2 ) { timer--;}
 
   // Create a client object to manage data from client (if any)
 	EthernetClient telnet_client = g_netserver.available();
@@ -192,67 +217,132 @@ void manage_netserver() {
 
 		// Execute disconnect
 		if (close_conn) {telnet_client.stop();}
+
+		// Send data to client
+		build_reply(dc);
+		telnet_client.write(g_reply);
 	}
 
-	now = millis()/5000 % 2;
-	if (now != timer) {
+	// If timer expired, send data and reset timer
+	if (timer == 0) {
+		build_reply(dc);
+		g_netserver.write(g_reply);
+		timer = REFRESH_INTERVAL;
+  }
+}
 
-		timer = now;
-    g_netserver.write(0x1b);g_netserver.write("[2J");
-    g_netserver.write(0x1b);g_netserver.write("[1;1H");
-  	g_netserver.println ("DC UPSMonitor");
-	  g_netserver.println ("-------------\n");
-	  g_netserver.println ("Status: AC Input");
-	  g_netserver.println ("Vout  : XX.YY V\n");
-	  g_netserver.println ("Module 1          Module 2          Module 3");
-	  g_netserver.println ("---------------+-----------------+---------------");
-	  g_netserver.println ("Iout: 00.00 A  |  Iout: 00.00 A  |  Iout: 00.00 A");
-	  g_netserver.println ("Ibat: 00.00 A  |  Ibat: 00.00 A  |  Ibat: 00.00 A");
-	  g_netserver.println ("Vbat: 00.00 V  |  Vbat: 00.00 V  |  Vbat: 00.00 V");
-	  g_netserver.println ("---------------+-----------------+---------------");
-	  g_netserver.println ("\nPress X to disconnect");
+
+
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: build_reply
+ * -------------------------------
+ * Build reply message for clients
+ *
+ * Invoked by:
+ * . manage_netserver   (network.cpp)
+ *
+ * Called Sub/Functions:
+ * . append             (network.cpp)
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used:
+ *  . g_reply           (network.cpp)
+ *
+ * Pre Processor Macro: NONE
+ *
+ * Struct:
+ * . dc_out_t           (datatypes.h)
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+ * . *dc: pointer to adc_out_t struct containing electric measures
+*/
+void build_reply(dc_out_t *dc) {
+	uint16_t last = 0;
+  char value[7];         // For converting float to string
+
+
+	// Cleanup reply buffer
+	for (uint16_t i = 0; i < sizeof(g_reply) - 1; i++) {g_reply[i]=0x20;}
+	g_reply[sizeof(g_reply)]=0x00;
+
+	g_reply[last] = 0x1b; last++;  // Disable cursor blinking
+	append("[?25l", &last);
+
+	g_reply[last] = 0x1b; last++;  // Clear screen
+	append("[2J", &last);
+
+	g_reply[last] = 0x1b; last++;  // Set cursor coordinates
+	append("[1;1H", &last);
+
+  append ("DC UPSMonitor\n", &last);
+  append ("-------------\n\n", &last);
+  append ("Status: AC Input\n", &last);
+
+  append ("Vout  : ", &last);
+  dtostrf(dc->dc_vout, 4, 2, value);
+  append (value, &last);
+  append (" V\n\n", &last);
+
+  // Module 1
+  append ("Module 1 --> ", &last);
+  append ("Iout: ", &last);  dtostrf(dc->m1_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Ibat: ", &last);  dtostrf(dc->m1_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Vbat: ", &last);  dtostrf(dc->m1_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
+
+  // Module 2
+  append ("Module 2 --> ", &last);
+  append ("Iout: ", &last);  dtostrf(dc->m2_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Ibat: ", &last);  dtostrf(dc->m2_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Vbat: ", &last);  dtostrf(dc->m2_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
+
+  // Module 3
+  append ("Module 3 --> ", &last);
+  append ("Iout: ", &last);  dtostrf(dc->m3_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Ibat: ", &last);  dtostrf(dc->m3_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
+  append ("Vbat: ", &last);  dtostrf(dc->m3_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
+
+  append ("\nPress X to disconnect\n", &last);
+}
+
+
+
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: append
+ * -------------------------------
+ * Append a string to reply message
+ *
+ * Invoked by:
+ * . build_reply        (network.cpp)
+ *
+ * Called Sub/Functions: NONE
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used:
+ *  . g_reply           (network.cpp)
+ *
+ * Pre Processor Macro: NONE
+ *
+ * Struct: NONE
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+ * . str: string to append
+ * . pos: where to append the string within g_reply global object
+*/
+void append (char str[],uint16_t *pos){
+  uint8_t i = 0;  // Track position within string to append
+
+  // Append data to g_reply until NUL is found
+  while (str[i] != 0x00) {
+   g_reply[*pos + i] = str[i];
+   i++;
   }
 
-
-	//if (client == 1) { Serial.println("rucevi"); Serial.println(client.read());}
-	// Serial.println("rucevi"); Serial.println(client.read());
+  // Update current position
+  *pos+= i;
 }
-
-void print_status(EthernetClient *clt) {
-  clt->write(0x1b);clt->write("[2J");
-  clt->write(0x1b);clt->write("[1;1H");
-  clt->println ("DC UPSMonitor");
-  clt->println ("-------------\n");
-  clt->println ("Status: AC Input");
-  clt->println ("Vout  : XX.YY V\n");
-  clt->println ("Module 1          Module 2          Module 3");
-  clt->println ("---------------+-----------------+---------------");
-  clt->println ("Iout: 00.00 A  |  Iout: 00.00 A  |  Iout: 00.00 A");
-  clt->println ("Ibat: 00.00 A  |  Ibat: 00.00 A  |  Ibat: 00.00 A");
-  clt->println ("Vbat: 00.00 V  |  Vbat: 00.00 V  |  Vbat: 00.00 V");
-  clt->println ("---------------+-----------------+---------------");
-  clt->println ("\nPress X to disconnect");
-}
-/*
-Stream ooo(EthernetClient *clt) {
-	char* message;
-	Stream char d;
-
-
-  d.write(0x1b);d.write("[2J");
-  d.write(0x1b);d.write("[1;1H");
-  d.println ("DC UPSMonitor");
-  d.println ("-------------\n");
-  d.println ("Status: AC Input");
-  d.println ("Vout  : XX.YY V\n");
-  d.println ("Module 1          Module 2          Module 3");
-  d.println ("---------------+-----------------+---------------");
-  d.println ("Iout: 00.00 A  |  Iout: 00.00 A  |  Iout: 00.00 A");
-  d.println ("Ibat: 00.00 A  |  Ibat: 00.00 A  |  Ibat: 00.00 A");
-  d.println ("Vbat: 00.00 V  |  Vbat: 00.00 V  |  Vbat: 00.00 V");
-  d.println ("---------------+-----------------+---------------");
-  d.println ("\nPress X to disconnect");
-
-  return d;
-}
-*/

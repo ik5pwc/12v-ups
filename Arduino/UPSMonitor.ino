@@ -26,7 +26,7 @@
 
 /* ------------------------------- GLOBAL VARIABLES DECLATATION ---------------------------- */
 static struct network_t  g_netstatus;   // Define globally network status
-
+static struct dc_out_t   g_dcstatus;    // Define globally in this module DC reading
 
 
 //The setup function is called once at startup of the sketch
@@ -40,18 +40,21 @@ void setup(){
 	//Ethernet.begin(mac);
 
 // Add your initialization code here
+
+	Serial.println("avvio");
 }
 
 // The loop function is called in an endless loop
 void loop(){
 
 	// If dynamic address is in use, renew or try to get a new one
-	if (g_netstatus.dhcp) {manage_network(&g_netstatus);}
+	if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
 
-  manage_netserver();
+  // Read DC data
 
-//	 Ethernet.maintain();
+	// Update display
 
-	//Serial.println(Ethernet.localIP());
-	//Add your repeated code here
+	// Manage telnet clients
+	manage_netserver(&g_dcstatus);
+
 }
