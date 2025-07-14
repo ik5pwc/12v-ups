@@ -5158,48 +5158,6 @@
 			)
 		)
 	)
-	(sheet
-		(at 187.452 137.922)
-		(size 35.56 15.24)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(stroke
-			(width 0.1524)
-			(type solid)
-		)
-		(fill
-			(color 0 0 0 0.0000)
-		)
-		(uuid "4e21c614-b5a4-4100-9644-6f855fad816c")
-		(property "Sheetname" "Untitled Sheet"
-			(at 187.452 137.2104 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left bottom)
-			)
-		)
-		(property "Sheetfile" "monitoring.kicad_sch"
-			(at 187.452 153.7466 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-			)
-		)
-		(instances
-			(project "12vUPS"
-				(path "/9d34b600-f815-4c52-bedd-9574651725eb"
-					(page "2")
-				)
-			)
-		)
-	)
 	(sheet_instances
 		(path "/"
 			(page "1")

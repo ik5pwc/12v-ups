@@ -41,6 +41,15 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 
 
 
+// Input LCD pins
+// Uses 4 pin (i.e. 4 bit nibble)
+#define LCD_RS D2                    // LCD Definition - R/S PIN
+#define LCD_EN D3                    // LCD Definition - Enable PIN
+#define LCD_D4 D4                    // LCD Data 4
+#define LCD_D5 D5                    // LCD Data 5
+#define LCD_D6 D6                    // LCD Data 6
+#define LCD_D7 D7                    // LCD Data 7
+
 
 
 
@@ -54,15 +63,6 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 // When changing this number, please update band definition in datatypes.h
 #define HAM_BANDS 12
 
-
-// Input LCD pins
-// Uses 4 pin (i.e. 4 bit nibble)
-#define LCD_RS A0                    // LCD Definition - R/S PIN
-#define LCD_EN A1                    // LCD Definition - Enable PIN
-#define LCD_D4 A2                    // LCD Data 4
-#define LCD_D5 A3                    // LCD Data 5
-#define LCD_D6 A4                    // LCD Data 6
-#define LCD_D7 A5                    // LCD Data 7
 
 // LCD size
 #define LCD_COLS 16                  // number of columns (min 16)
