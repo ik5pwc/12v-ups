@@ -58,7 +58,12 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "unconnected_items|66995519|54295597|44e38711-d9c7-41c2-b158-316f8efde84a|44e38711-d9c7-41c2-b158-316f8efde84a",
+          "GND by Arduino board"
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -136,7 +141,7 @@
         "min_text_height": 0.8,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
-        "min_track_width": 0.75,
+        "min_track_width": 0.2,
         "min_via_annular_width": 0.3,
         "min_via_diameter": 0.9,
         "solder_mask_to_copper_clearance": 0.0,
@@ -189,6 +194,7 @@
       "track_widths": [
         0.0,
         0.2,
+        0.5,
         0.5,
         0.75,
         1.0
