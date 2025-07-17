@@ -1,4 +1,4 @@
-25986416722107965
+25988169489872261
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -103830,3 +103830,10 @@ Varistor VF
 0
 2
 2
+custom_lib
+Arduino_UNO_R2
+Arduino UNO R2, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
+Arduino UNO R2
+0
+23
+23

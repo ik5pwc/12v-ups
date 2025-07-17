@@ -3504,6 +3504,12 @@
 		(uuid "60b8f52d-cc41-4b04-9b50-5e6f905e9e80")
 	)
 	(junction
+		(at 177.8 54.61)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6209788c-f38d-4fd0-8830-c71bbe14ed31")
+	)
+	(junction
 		(at 224.79 116.84)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3618,6 +3624,10 @@
 		(uuid "8f46ee04-fdb5-4154-b2f9-3d4461a34ce9")
 	)
 	(no_connect
+		(at 135.89 44.45)
+		(uuid "a7955c0f-381c-4cd2-a2d1-42b169c40800")
+	)
+	(no_connect
 		(at 118.11 54.61)
 		(uuid "a7dc13d8-8a67-4c76-a0b3-a2743aff0f88")
 	)
@@ -3715,6 +3725,16 @@
 	)
 	(wire
 		(pts
+			(xy 154.94 54.61) (xy 154.94 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0da0052a-0814-4997-bc8c-5fa960e95b19")
+	)
+	(wire
+		(pts
 			(xy 73.66 90.17) (xy 82.55 90.17)
 		)
 		(stroke
@@ -3722,6 +3742,16 @@
 			(type default)
 		)
 		(uuid "139ee696-f956-43bb-8253-af1764b8b3a0")
+	)
+	(wire
+		(pts
+			(xy 177.8 54.61) (xy 154.94 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "13bdc036-c56e-4094-84ab-de8e891ff1d8")
 	)
 	(wire
 		(pts
@@ -3945,16 +3975,6 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 44.45) (xy 154.94 55.88)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "55a34f10-fd8d-4dd7-8883-cca52215f75a")
-	)
-	(wire
-		(pts
 			(xy 190.5 69.85) (xy 214.63 69.85)
 		)
 		(stroke
@@ -3962,16 +3982,6 @@
 			(type default)
 		)
 		(uuid "56133e98-93af-4cf3-b9eb-27f74f25582d")
-	)
-	(wire
-		(pts
-			(xy 135.89 44.45) (xy 154.94 44.45)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "575a0b6f-2868-4cc2-a626-92d0b077f2af")
 	)
 	(wire
 		(pts
@@ -6497,7 +6507,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Module:Arduino_UNO_R2"
+		(property "Footprint" "custom_lib:Arduino_UNO_R2"
 			(at 130.81 69.85 0)
 			(effects
 				(font
