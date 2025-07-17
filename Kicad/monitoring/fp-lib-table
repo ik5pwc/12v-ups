@@ -1,0 +1,5 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "custom__footprint")(type "KiCad")(uri "${KIPRJMOD}/custom_footprint")(options "")(descr ""))
+  (lib (name "monitoring")(type "KiCad")(uri "/home/lc@civinini.home/GIT_Root/12v-ups/Kicad/monitoring.pretty")(options "")(descr ""))
+)

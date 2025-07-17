@@ -1,4 +1,4 @@
-25984664036642976
+25986416722105017
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -60829,6 +60829,13 @@ SMA THT Female Jack Horizontal
 0
 4
 2
+IK5PWC
+HCS-LSP
+
+Curren hall sensor open loop
+0
+3
+3
 IK5PWC
 Mammooth_4mm
 terminal block Metz Connect Type703_RT10N02HGLU, 2 pins, pitch 9.52mm, size 19x12.5mm^2, drill diamater 1.3mm, pad diameter 2.6mm, see http://www.metz-connect.com/de/system/files/productfiles/Datenblatt_317031_RT10NxxHGLU_OFF-022897S.pdf, script-generated using https://github.com/pointhi/kicad-footprint-generator/scripts/TerminalBlock_MetzConnect
