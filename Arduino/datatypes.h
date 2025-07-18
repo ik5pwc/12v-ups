@@ -94,6 +94,7 @@ enum action_t : uint8_t {
  * ----------------------------------------------------------------------------------------------------------------
 */
 
+// all network-related stuff
 struct network_t {
   uint8_t     ip[4]   = {0,0,0,0};      // Static or failback IP Address
   uint8_t     mask[4] = {0,0,0,0};      // Static or failback subnet mask
@@ -103,6 +104,8 @@ struct network_t {
   uint16_t dhcp_timer = 0 ;             // DHCP Timer for rebind/renew
 };
 
+
+// Readings / scaling factor
 struct dc_out_t {
 	float m1_iout = 11.345;
 	float m1_ibat = 12.345;
@@ -116,6 +119,7 @@ struct dc_out_t {
 	float ups_vout = 0;
 	float ps_vout = 0;
 };
+
 
 
 // Structure for controller configuration
@@ -170,23 +174,9 @@ struct hamband_t {
  *                                    CONSTs (SCALING FACTORS)
  * ----------------------------------------------------------------------------------------------------------------
 */
-/*
-// constant array containing band definition
-// Add or remove rows based on BANDS_COUNT macro defined in params.h
-const float scaling  {
-	float m1_iout_scale = 11.345;
-	float m1_ibat_scale = 12.345;
-	float m1_vbat_scale = 13.345;
-	float m2_iout_scale = 14.6530;
-	float m2_ibat_scale = 11.34440;
-	float m2_vbat_scale = 12.3450;
-	float m3_iout_scale = 4.567;
-	float m3_ibat_scale = 1.03;
-	float m3_vbat_scale = 30;
-	float dc_vout_scale = 0;
-	float dc_vin_scale = 0;
-};
 
+
+/*
 const hamband_t  hambands[HAM_BANDS +1] PROGMEM = {
   {.meters = 0  , .f_start = 0    ,  .f_end = 0      },   // INVALID: returned when frequency is out any band
   {.meters = 160, .f_start = 1800 ,  .f_end = 1900   },   // 160M

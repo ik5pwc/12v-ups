@@ -282,7 +282,7 @@ void build_reply(dc_out_t *dc) {
   append ("Status: AC Input\n", &last);
 
   append ("Vout  : ", &last);
-  dtostrf(dc->dc_vout, 4, 2, value);
+  dtostrf(dc->ups_vout, 4, 2, value);
   append (value, &last);
   append (" V\n\n", &last);
 

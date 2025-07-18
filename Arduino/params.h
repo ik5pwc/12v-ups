@@ -50,51 +50,33 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 #define LCD_D6 D6                    // LCD Data 6
 #define LCD_D7 D7                    // LCD Data 7
 
-
-
-
-
-
-
-// How many antenna to switch (max 9 due to BCD coding)
-#define ANT_COUNT 6
-
-// How many ham bands
-// When changing this number, please update band definition in datatypes.h
-#define HAM_BANDS 12
-
-
 // LCD size
 #define LCD_COLS 16                  // number of columns (min 16)
                                      // A Larger display (i.e. 2x20) can use longer antenna name
 
-#define ANT_NAME_LEN (LCD_COLS - 4)  // This is a derived param based on LCD column number
+
+// Scaling factors for readings - adjust based on resistor values and current sensos
+#define SCALE_M1_IOUT  1   // Module 1: Load Current
+#define SCALE_M1_IBAT  1       // Module 1: Battery Current
+#define SCALE_M1_VBAT  0.232   // Module 1: Battery Voltage
+#define SCALE_M2_IOUT  1   // Module 2: Load Current
+#define SCALE_M2_IBAT  0.232   // Module 2: Battery Current
+#define SCALE_M2_VBAT  1   // Module 2: Battery Voltage
+#define SCALE_M3_IOUT  1   // Module 3: Load Current
+#define SCALE_M3_IBAT  0.232   // Module 3: Battery Current
+#define SCALE_M3_VBAT  0.232   // Module 3: Battery Voltage
+#define SCALE_UPS_VOUT 0.232   // General : Load Voltage
+#define SCALE_PS_VOUT  0.232   // General : Power Supply Voltage
+
 
 // Switch buttons
 #define BTN_UP   2                  // Up button
 #define BTN_DOWN 3                  // Down button
-#define BTN_ESC  4                  // Esc button (used in menu)
-#define BTN_MENU 5                  // Menu button (enter and navigate in configs)
-
-// Output LED
-#define LED_RUNNING  6
-#define LED_AUTOMODE 7
-
-// CI-V input PIN
-// these are FIXED due to AltSoftSerial Usage
-// Declared here just for reading
-#define ALTSERIAL_RX 8
-#define ALTSERIAL_TX 9
-
-// Output PIN (BCD coding)
-#define OUT1 10                      // Output pins for BCD out - LSB
-#define OUT2 11                      // Output pins for BCD out
-#define OUT3 12                      // Output pins for BCD out
-#define OUT4 13                      // Output pins for BCD out - MSB
 
 
-// list of valid chars to be used within antenna names
-const char allowed_chars [] PROGMEM ={"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 1234567890 +-*/)(&%.,<>^#@"};
+// Output PIN dor driving multiplexer
+#define AMUX1 10                      // Output pins for BCD out - LSB
+#define AMUX2 11                      // Output pins for BCD out
 
 
 /* ----------------------------------------------------------------------------------------------------------------
@@ -102,7 +84,7 @@ const char allowed_chars [] PROGMEM ={"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmn
  * ----------------------------------------------------------------------------------------------------------------
  */
 
-#define VERSION "2.2b"               // Program version
+#define VERSION "0.5"               // Program version
 
 // end of define guard
 #endif
