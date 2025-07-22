@@ -51,7 +51,7 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 
 
 // Scaling factors for readings - adjust based on resistor values and current sensos
-#define SCALE_VOLTAGE  0.25
+#define SCALE_VOLTAGE  4
 #define SCALE_M1_IOUT  1             // Module 1: Load Current
 #define SCALE_M1_IBAT  1             // Module 1: Battery Current
 #define SCALE_M2_IOUT  1             // Module 2: Load Current

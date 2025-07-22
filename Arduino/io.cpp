@@ -108,45 +108,50 @@ void read_sensor (dc_out_t *dc) {
   static read_sensor_state_t mux = mux0;
   uint16_t read[5] = {0,0,0,0,0};     // array to store analog input reads.
 
-
   // Select multiplexer
   digitalWrite(AMUX1, mux & 0x01);
   digitalWrite(AMUX2, mux & 0x02);
   delay (WAIT_MUX_MS);
 
   // Read analog data - 1st pass
- 	read[4] = analogRead(A5);           // m3 Vbat
- 	read[3] = analogRead(A4);           // m2 Vbat
- 	read[2] = analogRead(A3);           // m1 Vbat
- 	read[1] = analogRead(A2);           // mux Y
- 	read[0] = analogRead(A0);           // mux X
-
+  Serial.println("inizio");
+  read[4] = analogRead(A4); delay(10);
+  read[3] = analogRead(A3); delay(10);
+  read[2] = analogRead(A2); delay(10);
+  read[0] = analogRead(A0); delay(10);
+  read[1] = analogRead(A1); delay(10);
 
   // Save values in global array
-  dc->m1_ibat = read[2] * SCALE_VOLTAGE;
-	dc->m2_ibat = read[3] * SCALE_VOLTAGE;
-	dc->m3_ibat = read[4] * SCALE_VOLTAGE;
+  if (read[2] != 1023) {dc->m1_vbat = VOLT(read[2]) * SCALE_VOLTAGE;}
+  if (read[3] != 1023) {dc->m2_vbat = VOLT(read[3]) * SCALE_VOLTAGE;}
+  if (read[4] != 1023) {dc->m3_vbat = VOLT(read[4]) * SCALE_VOLTAGE;}
 
   // compute other values
   switch (mux) {
     case mux0 :
-    	dc->m1_iout = read[0] * SCALE_M1_IOUT;
-    	dc->m1_ibat = read[1] * SCALE_M1_IBAT;
+    	dc->m2_ibat = read[0] * SCALE_M1_IOUT;
+    	dc->m1_ibat = read[1] * SCALE_M3_IOUT;
     	break;
     case mux1 :
-      dc->m1_iout = read[0] * SCALE_M1_IOUT;
-      dc->m1_ibat = read[1] * SCALE_M1_IBAT;
+      dc->m2_iout = read[0] * SCALE_M1_IOUT;
+      dc->m3_ibat = read[1] * SCALE_M3_IBAT;
       break;
     case mux2 :
-  	  dc->m1_iout = read[0] * SCALE_M1_IOUT;
-  	  dc->m1_ibat = read[1] * SCALE_M1_IBAT;
+  	  dc->m1_iout = read[0] * SCALE_M2_IOUT;
+  	  dc->m3_iout = read[1] * SCALE_M3_IOUT;
   	  break;
     case mux3 :
-  	  dc->m1_iout = read[0] * SCALE_M1_IOUT;
-  	  dc->m1_ibat = read[1] * SCALE_M1_IBAT;
+  	  dc->ps_vout  = VOLT(read[0]) * SCALE_VOLTAGE;
+  	  dc->ups_vout = VOLT(read[1]) * SCALE_VOLTAGE;
   	  break;
   }
 
+  // Compute total current and power
+  dc->ups_itot = dc->m1_iout + dc->m2_iout + dc->m3_iout;
+  dc->ups_pwr = dc->ups_itot * dc->ups_vout;
+
+  // move to next mux
+  if (mux == mux3) {mux = mux0; } else {mux = mux +1;}
 }
 
 
@@ -177,7 +182,15 @@ void read_sensor (dc_out_t *dc) {
  * Arguments: NONE
 */
 void init_pin() {
+  analogReference(INTERNAL); //set reference voltage to internal
+
   // Switch output
   pinMode (AMUX1, OUTPUT);
   pinMode (AMUX2, OUTPUT);
+  pinMode (A0, INPUT);
+  pinMode (A1, INPUT);
+  pinMode (A2, INPUT);
+  pinMode (A3, INPUT);
+  pinMode (A4, INPUT);
+
 }

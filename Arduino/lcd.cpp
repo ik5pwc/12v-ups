@@ -224,13 +224,30 @@ void lcd_print_module (dc_out_t *dc, uint8_t module) {
 
 	// First row
 	g_lcd.print("M"); g_lcd.print(module);
-	g_lcd.print (" Iout "); g_lcd.print(dc->m1_iout,2);g_lcd.print("A");
+	g_lcd.print (" Iout ");
+	switch (module) {
+	  case 1: g_lcd.print(dc->m1_iout,2); break;
+	  case 2: g_lcd.print(dc->m2_iout,2); break;
+	  case 3: g_lcd.print(dc->m3_iout,2); break;
+	}
+	g_lcd.print("A");
 
 	// Second row
 	g_lcd.setCursor(0, 1);
 	g_lcd.print("B"); g_lcd.print(module); g_lcd.print (" ");
-	g_lcd.print(dc->m1_vbat,2);g_lcd.print("V ");
-	g_lcd.print(dc->m1_ibat,2);g_lcd.print("A");
+	switch (module) {
+	  case 1: g_lcd.print(dc->m1_vbat,2); break;
+	  case 2: g_lcd.print(dc->m2_vbat,2); break;
+	  case 3: g_lcd.print(dc->m3_vbat,2); break;
+	}
+	g_lcd.print("V ");
+
+	switch (module) {
+	  case 1: g_lcd.print(dc->m1_ibat,2); break;
+	  case 2: g_lcd.print(dc->m2_ibat,2); break;
+	  case 3: g_lcd.print(dc->m3_ibat,2); break;
+	}
+  g_lcd.print("A");
 }
 
 

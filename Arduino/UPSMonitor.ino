@@ -58,6 +58,7 @@ void loop(){
 	//if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
 
   // Read DC data
+	read_sensor (&dcstatus);
 
 	// Read buttons
 	button = read_keys_analog();
