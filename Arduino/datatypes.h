@@ -23,6 +23,7 @@
  * ----------------------------------------------------------------------------------------------------------------
 */
 
+// Define how IP address was assigned to device
 enum dhcp_status_t : uint8_t {
   manual     = 0xA0,
   dynamic    = 0xA2,
@@ -31,63 +32,12 @@ enum dhcp_status_t : uint8_t {
 };
 
 
-
-
-
-
-
-
-// Enum for controller state machine
-enum operate_states_t : uint8_t {
-  oper_auto      = 0xA0,     // Antenna selection driven by CAT
-  oper_manual    = 0xA3,     // Antenna selection driven by manual switches
-  oper_config    = 0xA4,
-  oper_cfg_start = 0xA6,
-  oper_cfg_end   = 0xC6
-};
-
-enum configure_states_t : uint8_t {
-  cfg_null        = 0xB0,
-  cfg_start       = 0xB1,
-  cfg_main        = 0xB2,
-  cfg_civ_address = 0xB3,
-  cfg_civ_speed   = 0xB4,
-  cfg_civ_ic735   = 0xB5,
-  cfg_map_band    = 0xB6,
-  cfg_map_ant     = 0xB7,
-  cfg_ant_sel     = 0xB8,
-  cfg_ant_name    = 0xB9,
-  cfg_info        = 0xBA,
-  cfg_factory     = 0xBB,
-  cfg_exit        = 0xBF
-};
-
-// CI-V serial speed
-enum serial_speed_t : uint8_t {
-  disable   = 0x00,
-  bps_1200  = 0x01,
-  bps_2400  = 0x02,
-  bps_4800  = 0x03,
-  bps_9600  = 0x04,
-  bps_19200 = 0x05
-};
-
 // Enum for button status
 enum key_status_t : uint8_t {
-  key_none      = 0x20,
-  key_up        = 0x21,
-  key_down      = 0x22,
-  key_menu      = 0x23,
-  key_menu_long = 0x24,
-  key_esc       = 0x25
-
+  off     = 0x20,
+  on      = 0x21,
 };
 
-enum action_t : uint8_t {
-  action_save   = 0x41,
-  action_cancel = 0x42,
-  action_none =   0x43
-};
 
 /* ----------------------------------------------------------------------------------------------------------------
  *                                               STRUCTs
@@ -110,64 +60,22 @@ struct dc_out_t {
 	float m1_iout = 11.345;
 	float m1_ibat = 12.345;
 	float m1_vbat = 13.345;
+	float m1_pwr  = 113.3;
 	float m2_iout = 14.6530;
 	float m2_ibat = 11.34440;
 	float m2_vbat = 12.3450;
+	float m2_pwr  = 111.3;
 	float m3_iout = 4.567;
 	float m3_ibat = 1.03;
 	float m3_vbat = 30;
-	float ups_vout = 0;
-	float ps_vout = 0;
+	float m3_pwr  = 3.3;
+	float ups_vout = 11.34524;
+	float ups_itot = 22.34524;
+	float ups_pwr = 1233.44;
+	float ps_vout = 10;
 };
 
 
-
-// Structure for controller configuration
-
-//struct settings_t {                                  /*  Description                     */
-                                                     /* -------------------------------- */
-//  uint16_t     checksum = 0;                         /* configuration checksum           */
-//  serial_speed_t serial = disable;                   /* Serial port speed                */
-//  boolean     ic735mode = false;                     /* CI-V 735 mode                    */
-//  uint8_t       address = 0x00;                      /* CI-V transceiver address         */
-//  uint8_t band_antenna[HAM_BANDS +1];                /* 1:1 Array for the band<>antenna  */
-//  char ant_names[ANT_COUNT*ANT_NAME_LEN+1];          /* Array for antenna names          */
-//};
-
-
-// Structure holding all information about current controller state
-struct operate_status_t {                            /*  Description                     */
-                                                     /* -------------------------------- */
-  operate_states_t     state = oper_auto;            /*  current controller state        */
-  uint32_t              freq = 0;                    /*  current frequency               */
-  uint8_t           band_idx = 0;                    /*  pointer to hambands const       */
-  uint8_t        antenna_idx = 0;                    /*  currently selected antenna      */
-  key_status_t           key = key_none;             /*  button status                   */
-};
-
-
-// Store configuration menu status
-struct configure_status_t  {                         /*  Description                     */
-                                                     /* -------------------------------- */
-  configure_states_t  state = cfg_null;              /* Configuation state machine       */
-  uint8_t     timeout_timer = 0;                     /* 1 sec timer for timeout eval     */
-  uint8_t          main_idx = 0;                     /* Index to track first level menu  */
-  uint8_t           sub_idx = 0;                     /* Index to track second level menu */
-  uint8_t          char_idx = 0;                     /* Track char during name editing   */
-  action_t           action = action_none;           /* Used for printing action msg     */
-  key_status_t          key = key_none;              /* Button status                    */
-  boolean       save_eeprom = false;                 /* true if save EEPROM is needed    */
-  char    new_name[(LCD_COLS - 4)];                  /* Temp space for storing new name  */
-
-};
-
-
-// Structure defining an Ham Band
-struct hamband_t {
-  uint8_t  meters;
-  uint32_t f_start;
-  uint32_t f_end ;
-};
 
 
 /* ----------------------------------------------------------------------------------------------------------------

@@ -14,10 +14,6 @@
 #ifndef params_h
 #define params_h
 
-// Include arduino header
-#include <Arduino.h>
-
-
 
 /* ----------------------------------------------------------------------------------------------------------------
  *                                             PARAMS CONFIGURATION STARTS
@@ -40,43 +36,40 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 #define PORT 23
 
 
-
 // Input LCD pins
 // Uses 4 pin (i.e. 4 bit nibble)
-#define LCD_RS D2                    // LCD Definition - R/S PIN
-#define LCD_EN D3                    // LCD Definition - Enable PIN
-#define LCD_D4 D4                    // LCD Data 4
-#define LCD_D5 D5                    // LCD Data 5
-#define LCD_D6 D6                    // LCD Data 6
-#define LCD_D7 D7                    // LCD Data 7
+#define LCD_D4 2                    // LCD Data 4
+#define LCD_D5 3                    // LCD Data 5
+#define LCD_D6 4                    // LCD Data 6
+#define LCD_D7 5                    // LCD Data 7
+#define LCD_EN 6                    // LCD Definition - Enable PIN
+#define LCD_RS 7                    // LCD Definition - R/S PIN
 
 // LCD size
 #define LCD_COLS 16                  // number of columns (min 16)
-                                     // A Larger display (i.e. 2x20) can use longer antenna name
+#define PAGE_TIMEOUT_SEC 4           // how many seconds remains in specific lcd page
 
 
 // Scaling factors for readings - adjust based on resistor values and current sensos
-#define SCALE_M1_IOUT  1   // Module 1: Load Current
-#define SCALE_M1_IBAT  1       // Module 1: Battery Current
-#define SCALE_M1_VBAT  0.232   // Module 1: Battery Voltage
-#define SCALE_M2_IOUT  1   // Module 2: Load Current
-#define SCALE_M2_IBAT  0.232   // Module 2: Battery Current
-#define SCALE_M2_VBAT  1   // Module 2: Battery Voltage
-#define SCALE_M3_IOUT  1   // Module 3: Load Current
-#define SCALE_M3_IBAT  0.232   // Module 3: Battery Current
-#define SCALE_M3_VBAT  0.232   // Module 3: Battery Voltage
-#define SCALE_UPS_VOUT 0.232   // General : Load Voltage
-#define SCALE_PS_VOUT  0.232   // General : Power Supply Voltage
-
+#define SCALE_VOLTAGE  0.25
+#define SCALE_M1_IOUT  1             // Module 1: Load Current
+#define SCALE_M1_IBAT  1             // Module 1: Battery Current
+#define SCALE_M2_IOUT  1             // Module 2: Load Current
+#define SCALE_M2_IBAT  0.25          // Module 2: Battery Current
+#define SCALE_M3_IOUT  1             // Module 3: Load Current
+#define SCALE_M3_IBAT  0.25         // Module 3: Battery Current
+//#define SCALE_M2_VBAT  1             // Module 2: Battery Voltage
+//#define SCALE_M1_VBAT  0.25          // Module 1: Battery Voltage
+//#define SCALE_M3_VBAT  0.25         // Module 3: Battery Voltage
+//#define SCALE_UPS_VOUT 0.25         // General : Load Voltage
+//#define SCALE_PS_VOUT  0.25         // General : Power Supply Voltage
 
 // Switch buttons
-#define BTN_UP   2                  // Up button
-#define BTN_DOWN 3                  // Down button
-
+#define BUTTON   A5                  // Button PIN
 
 // Output PIN dor driving multiplexer
-#define AMUX1 10                      // Output pins for BCD out - LSB
-#define AMUX2 11                      // Output pins for BCD out
+#define AMUX1 10                      // Multiplexer A pin
+#define AMUX2 11                      // Multiplexer B pin
 
 
 /* ----------------------------------------------------------------------------------------------------------------
@@ -84,7 +77,7 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
  * ----------------------------------------------------------------------------------------------------------------
  */
 
-#define VERSION "0.5"               // Program version
+#define VERSION "0.7"               // Program version
 
 // end of define guard
 #endif

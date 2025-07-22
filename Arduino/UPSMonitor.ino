@@ -17,16 +17,18 @@
 */
 
 /* -------------- Include files (project specific) ------------- */
-#include "Arduino.h"
+#include <Arduino.h>
 #include "params.h"
 #include "network.h"
+#include "lcd.h"
+#include "io.h"
 
 
-
+//TODO: mettere le letture potenza in telnet
+//TODO: sistemare void lcd_print_module con i valori
 
 /* ------------------------------- GLOBAL VARIABLES DECLATATION ---------------------------- */
 static struct network_t  g_netstatus;   // Define globally network status
-static struct dc_out_t   g_dcstatus;    // Define globally in this module DC reading
 
 
 //The setup function is called once at startup of the sketch
@@ -34,27 +36,35 @@ void setup(){
   // Debugging
   Serial.begin(9600);
 
+  // Init LCD
+  lcd_init();
+
   // Ethernet init
-	init_network(&g_netstatus);
+	//init_network(&g_netstatus);
 
 	//Ethernet.begin(mac);
 
 // Add your initialization code here
 
-	Serial.println("avvio");
+	//Serial.println("avvio");
 }
 
 // The loop function is called in an endless loop
 void loop(){
+	static struct dc_out_t   dcstatus;         // hold sensor readings
+	static key_status_t button = off;        // hold buttons
 
 	// If dynamic address is in use, renew or try to get a new one
-	if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
+	//if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
 
   // Read DC data
 
+	// Read buttons
+	button = read_keys_analog();
+
 	// Update display
+	lcd_operate(&dcstatus, &g_netstatus, &button);
 
 	// Manage telnet clients
-	manage_netserver(&g_dcstatus);
-
+	//manage_netserver(&dcstatus);
 }
