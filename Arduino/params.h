@@ -48,28 +48,36 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 // LCD size
 #define LCD_COLS 16                  // number of columns (min 16)
 #define PAGE_TIMEOUT_SEC 4           // how many seconds remains in specific lcd page
+#define MANUAL_TIMEOUT_SCALE 3       // How to scale the timeout in manual operation mode
 
 
 // Scaling factors for readings - adjust based on resistor values and current sensos
-#define SCALE_VOLTAGE  4
-#define SCALE_M1_IOUT  1             // Module 1: Load Current
-#define SCALE_M1_IBAT  1             // Module 1: Battery Current
-#define SCALE_M2_IOUT  1             // Module 2: Load Current
-#define SCALE_M2_IBAT  0.25          // Module 2: Battery Current
-#define SCALE_M3_IOUT  1             // Module 3: Load Current
-#define SCALE_M3_IBAT  0.25         // Module 3: Battery Current
-//#define SCALE_M2_VBAT  1             // Module 2: Battery Voltage
-//#define SCALE_M1_VBAT  0.25          // Module 1: Battery Voltage
-//#define SCALE_M3_VBAT  0.25         // Module 3: Battery Voltage
-//#define SCALE_UPS_VOUT 0.25         // General : Load Voltage
-//#define SCALE_PS_VOUT  0.25         // General : Power Supply Voltage
+#define ADC_ERR_VOLTAGE     30          // QTY to sum or subctract from ADC value to make it read right values (for voltages)
+                                        // To be defined experimentally comparing ADC readout with input value
+
+#define ADC_ERR_CURRENT     15          // QTY to sum or subctract from ADC value to make it read right values (for current)
+                                        // To be defined experimentally comparing ADC readout with input value
+
+#define CURRENT_SENSOR_MAX  10          // Max current reading for specified sensor
+
+#define SCALE_VOLTAGE       4.15        // Based on voltage partition formula + experimental adj
+                                        // Compare input voltage with one from partition
+
+// Used if current sensor is place reversed regarding current flow
+#define SCALE_M1_IOUT  -1               // Module 1: Load Current
+#define SCALE_M1_IBAT  -1               // Module 1: Battery Current
+#define SCALE_M2_IOUT  -1               // Module 2: Load Current (reverse)
+#define SCALE_M2_IBAT  -1               // Module 2: Battery Current
+#define SCALE_M3_IOUT  -1               // Module 3: Load Current
+#define SCALE_M3_IBAT  -1               // Module 3: Battery Current
+
 
 // Switch buttons
 #define BUTTON   A5                  // Button PIN
 
 // Output PIN dor driving multiplexer
-#define AMUX1 10                      // Multiplexer A pin
-#define AMUX2 11                      // Multiplexer B pin
+#define AMUX1 8                      // Multiplexer A pin
+#define AMUX2 9                      // Multiplexer B pin
 
 
 /* ----------------------------------------------------------------------------------------------------------------
@@ -77,7 +85,7 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
  * ----------------------------------------------------------------------------------------------------------------
  */
 
-#define VERSION "0.7"               // Program version
+#define VERSION "0.9"               // Program version
 
 // end of define guard
 #endif

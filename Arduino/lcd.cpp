@@ -94,6 +94,7 @@ void lcd_init() {
  * Pre Processor Macro:
  * . PAGE_TIMEOUT_SEC      (params.h)
  * . PAGE_UPDATE_SEC       (params.h)
+ * . MANUAL_TIMEOUT_SCALE  (params.h)
  *
  * Struct:
  * . dc_out_t              (datatypes.h)
@@ -119,7 +120,7 @@ void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
   	if (lcd_page == gateway ){ lcd_page = general;} else {lcd_page = lcd_page + 1;}
 
   	// Reset timer to 2 * standard timer
-  	page_timeout = 2*PAGE_TIMEOUT_SEC;
+  	page_timeout = MANUAL_TIMEOUT_SCALE * PAGE_TIMEOUT_SEC;
   }
 
     // Page timer expired?

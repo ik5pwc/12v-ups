@@ -13,6 +13,9 @@
 #include "io.h"
 
 
+static float adc_voltage(uint16_t adc);
+static float adc_current(uint16_t adc);
+
 /*----------------------------------------------------------------------------------------------------------------------
  * Function: read_keys
  * -------------------------------
@@ -51,7 +54,7 @@ key_status_t read_keys_analog() {
   // Validate analog reads
   if (read1 >> 2 == read2>>2 ){
     // ok two readings are "similar, take action
-  	if (read1 < 100) { key_now = on; } else {key_now = off;}
+  	if (read1 > 1000) { key_now = on; } else {key_now = off;}
 
   	// Report status change only if there was an "off" between two on
   	if (key_now == on && key_old == on ) {key_now = off;} else {key_old = key_now;}
@@ -109,40 +112,63 @@ void read_sensor (dc_out_t *dc) {
   uint16_t read[5] = {0,0,0,0,0};     // array to store analog input reads.
 
   // Select multiplexer
-  digitalWrite(AMUX1, mux & 0x01);
-  digitalWrite(AMUX2, mux & 0x02);
-  delay (WAIT_MUX_MS);
+  digitalWrite (AMUX1, mux & 0x01);
+  digitalWrite (AMUX2, mux & 0x02);
+  delay(WAIT_MUX_MS);                   // time propagation for CD4052a
+/*
+  // Read analog data
+  read[4] = analogRead(A4); if (read[4] < ADC_LOW_LIMIT ) {read[4] = 0;}
+  read[3] = analogRead(A3); if (read[3] < ADC_LOW_LIMIT ) {read[3] = 0;}
+  read[2] = analogRead(A2); if (read[2] < ADC_LOW_LIMIT ) {read[2] = 0;}
+  read[1] = analogRead(A1); if (read[1] < ADC_LOW_LIMIT ) {read[1] = 0;}
+  read[0] = analogRead(A0); if (read[0] < ADC_LOW_LIMIT ) {read[0] = 0;}
 
-  // Read analog data - 1st pass
-  Serial.println("inizio");
-  read[4] = analogRead(A4); delay(10);
-  read[3] = analogRead(A3); delay(10);
-  read[2] = analogRead(A2); delay(10);
-  read[0] = analogRead(A0); delay(10);
-  read[1] = analogRead(A1); delay(10);
+*/
+  // Perform multiple readings
+  Serial.println(mux,HEX);
+  for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[0] += analogRead(A0);}
+  read[0] = read[0]/ANALOG_READ_PASSES;
+  Serial.print(read[0]); Serial.print ("     "); Serial.println(adc_voltage(read[0]));
 
-  // Save values in global array
-  if (read[2] != 1023) {dc->m1_vbat = VOLT(read[2]) * SCALE_VOLTAGE;}
-  if (read[3] != 1023) {dc->m2_vbat = VOLT(read[3]) * SCALE_VOLTAGE;}
-  if (read[4] != 1023) {dc->m3_vbat = VOLT(read[4]) * SCALE_VOLTAGE;}
+  for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[1] += analogRead(A1);}
+  read[1] = read[1]/ANALOG_READ_PASSES ;
+  Serial.println(adc_voltage(read[1]));
+
+  for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[2] += analogRead(A2);}
+  read[2] = read[2]/ANALOG_READ_PASSES;
+  Serial.println(read[2]);
+
+  for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[3] += analogRead(A3);}
+  read[3] = read[3]/ANALOG_READ_PASSES;
+  Serial.println(read[3]);
+
+  for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[4] += analogRead(A4);}
+  read[4] = read[4]/ANALOG_READ_PASSES;
+  Serial.println(read[4]);
+
+
+  // Battery voltage are always the same
+  dc->m1_vbat = adc_voltage(read[2]) * SCALE_VOLTAGE;
+  dc->m2_vbat = adc_voltage(read[3]) * SCALE_VOLTAGE;
+  dc->m3_vbat = adc_voltage(read[4]) * SCALE_VOLTAGE;
 
   // compute other values
   switch (mux) {
     case mux0 :
-    	dc->m2_ibat = read[0] * SCALE_M1_IOUT;
-    	dc->m1_ibat = read[1] * SCALE_M3_IOUT;
+    	if (read[0] != 0 ) {dc->m2_ibat = adc_current(read[0]) * SCALE_M2_IBAT;} else {dc->m2_ibat = 0;}
+    	if (read[1] != 0 ) {dc->m1_ibat = adc_current(read[1]) * SCALE_M1_IBAT;} else {dc->m1_ibat = 0;}
     	break;
     case mux1 :
-      dc->m2_iout = read[0] * SCALE_M1_IOUT;
-      dc->m3_ibat = read[1] * SCALE_M3_IBAT;
+    	if (read[0] != 0 ) {dc->m2_iout = adc_current(read[0]) * SCALE_M2_IOUT;} else {dc->m2_iout = 0;}
+    	if (read[1] != 0 ) {dc->m3_ibat = adc_current(read[1]) * SCALE_M3_IBAT;} else {dc->m3_ibat = 0;}
       break;
     case mux2 :
-  	  dc->m1_iout = read[0] * SCALE_M2_IOUT;
-  	  dc->m3_iout = read[1] * SCALE_M3_IOUT;
+    	if (read[0] != 0 ) {dc->m1_iout = adc_current(read[0]) * SCALE_M1_IOUT;} else {dc->m1_iout = 0;}
+    	if (read[1] != 0 ) {dc->m3_iout = adc_current(read[1]) * SCALE_M3_IOUT;} else {dc->m3_iout = 0;}
   	  break;
     case mux3 :
-  	  dc->ps_vout  = VOLT(read[0]) * SCALE_VOLTAGE;
-  	  dc->ups_vout = VOLT(read[1]) * SCALE_VOLTAGE;
+  	  dc->ps_vout  = adc_voltage(read[0]) * SCALE_VOLTAGE;
+  	  dc->ups_vout = adc_voltage(read[1]) * SCALE_VOLTAGE;
   	  break;
   }
 
@@ -156,7 +182,9 @@ void read_sensor (dc_out_t *dc) {
 
 
 
+float adc_voltage(uint16_t adc) { return ((float)adc - ADC_ERR_VOLTAGE ) * 5 / 1023;}
 
+float adc_current(uint16_t adc) {return ((( (float)adc - ADC_ERR_CURRENT ) * 5 / 1023) - 2.5) * CURRENT_SENSOR_MAX /2 ;}
 /*----------------------------------------------------------------------------------------------------------------------
  * Function: init_pin
  * -------------------------------
@@ -187,6 +215,9 @@ void init_pin() {
   // Switch output
   pinMode (AMUX1, OUTPUT);
   pinMode (AMUX2, OUTPUT);
+  pinMode (AMUX1, LOW);
+  pinMode (AMUX2, LOW);
+
   pinMode (A0, INPUT);
   pinMode (A1, INPUT);
   pinMode (A2, INPUT);
