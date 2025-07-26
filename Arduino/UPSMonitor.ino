@@ -25,7 +25,8 @@
 
 
 //TODO: mettere le letture potenza in telnet
-//TODO: sistemare void lcd_print_module con i valori
+//TODO: mettere lo stato del MQTT (connesso)
+
 
 /* ------------------------------- GLOBAL VARIABLES DECLATATION ---------------------------- */
 static struct network_t  g_netstatus;   // Define globally network status
@@ -40,22 +41,19 @@ void setup(){
   lcd_init();
 
   // Ethernet init
-	//init_network(&g_netstatus);
+	init_network(&g_netstatus);
 
-	//Ethernet.begin(mac);
-
-// Add your initialization code here
-
-	//Serial.println("avvio");
+	// Init mqtt support
+	if (MQTTSUPPORT) {init_mqtt();}
 }
 
 // The loop function is called in an endless loop
 void loop(){
 	static struct dc_out_t   dcstatus;         // hold sensor readings
-	static key_status_t button = off;        // hold buttons
+	static key_status_t button = off;          // hold buttons
 
 	// If dynamic address is in use, renew or try to get a new one
-	//if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
+	if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
 
   // Read DC data
 	read_sensor (&dcstatus);
@@ -67,5 +65,8 @@ void loop(){
 	lcd_operate(&dcstatus, &g_netstatus, &button);
 
 	// Manage telnet clients
-	//manage_netserver(&dcstatus);
+	manage_network(&dcstatus);
+
+  // if enabled, send to MQTT Broker
+	//if (MQTTSUPPORT) {manage_mqtt( &dcstatus);}
 }

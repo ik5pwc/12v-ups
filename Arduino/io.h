@@ -24,10 +24,6 @@
 #define WAIT_MUX_MS     5         // milliseconds to wait after changing mux status
 #define ANALOG_READ_PASSES 25     // Number of analog readings to perform
 
-// Simple function to return voltage from ADC using appropriate error correction
-//#define VOLT(x)
-
-//#define CURRENT(x)  ( ( ((float)x - ADC_ERR_CURRENT)) * 5 / 1023) - 2.5) * CURRENT_SENSOR_MAX /2 ));
 
 
 /* ------------- Enum ------------- */

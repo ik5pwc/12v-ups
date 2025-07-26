@@ -14,12 +14,34 @@
 
 /* ------- private global variables -------- */
 static EthernetServer g_netserver = EthernetServer(PORT);     // Ethernet telnet server
-static char g_reply[275];                                     // Telnet reply
+static EthernetClient g_netclient;                            // Ethernet Client
+static char g_reply[512];                                     // Telnet reply
+static MQTTClient g_mqtt_publisher (g_netclient);             // MQTT client for publisher
 
 
 /* ---- Static functions (i.e. callable only within this file) ----- */
 static void build_reply (dc_out_t *dc);
 static void append (char str[],uint16_t *pos);
+
+
+void init_mqtt() {
+	g_mqtt_publisher.begin(MQTTBROKER,MQTTPORT,g_netclient);
+}
+
+void manage_mqtt(dc_out_t *dc) {
+	g_mqtt_publisher.loop();
+
+	// Test if broker is connected
+	if (! g_mqtt_publisher.connected() ){
+		Serial.println ("ppp");
+		// Connect to broker
+		g_mqtt_publisher.connect("net-dc-ups");
+
+		delay (15000);
+		g_mqtt_publisher.subscribe("net-dc-ups");
+	}
+
+}
 
 
 /*----------------------------------------------------------------------------------------------------------------------
@@ -163,8 +185,9 @@ void manage_ip(network_t *net) {
 
 
 
+
 /*----------------------------------------------------------------------------------------------------------------------
- * Function: manage_netserver
+ * Function: manage_network
  * -------------------------------
  * Send data to connected clients
  *
@@ -192,7 +215,7 @@ void manage_ip(network_t *net) {
  * Arguments:
  * . *dc: pointer to adc_out_t struct containing electric measures
 */
-void manage_netserver(dc_out_t* dc) {
+void manage_network(dc_out_t* dc) {
   char rx_buffer[50];                           // Buffer for data sent by client
 
   bool close_conn = false;                      // If set to true disconnect client
@@ -265,8 +288,8 @@ void build_reply(dc_out_t *dc) {
 
 
 	// Cleanup reply buffer
-	for (uint16_t i = 0; i < sizeof(g_reply) - 1; i++) {g_reply[i]=0x20;}
-	g_reply[sizeof(g_reply)]=0x00;
+	for (uint16_t i = 0; i < sizeof(g_reply); i++) {g_reply[i]=0x20;}
+	//g_reply[sizeof(g_reply)]=0x00;
 
 	g_reply[last] = 0x1b; last++;  // Disable cursor blinking
 	append("[?25l", &last);
@@ -336,6 +359,7 @@ void build_reply(dc_out_t *dc) {
 */
 void append (char str[],uint16_t *pos){
   uint8_t i = 0;  // Track position within string to append
+  //Serial.print(str); Serial.print("  ");Serial.println(*pos);
 
   // Append data to g_reply until NUL is found
   while (str[i] != 0x00) {

@@ -57,21 +57,21 @@ struct network_t {
 
 // Readings / scaling factor
 struct dc_out_t {
-	float m1_iout = 11.345;
-	float m1_ibat = 12.345;
+	float m1_iout = 0;
+	float m1_ibat = 0;
 	float m1_vbat = 0;
-	float m1_pwr  = 113.3;
-	float m2_iout = 14.6530;
-	float m2_ibat = 11.34440;
+	float m1_pwr  = 0;
+	float m2_iout = 0;
+	float m2_ibat = 0;
 	float m2_vbat = 0;
-	float m2_pwr  = 111.3;
-	float m3_iout = 4.567;
-	float m3_ibat = 1.03;
+	float m2_pwr  = 0;
+	float m3_iout = 0;
+	float m3_ibat = 0;
 	float m3_vbat = 0;
-	float m3_pwr  = 3.3;
-	float ups_vout = 11.34524;
-	float ups_itot = 22.34524;
-	float ups_pwr = 1233.44;
+	float m3_pwr  = 0;
+	float ups_vout = 0;
+	float ups_itot = 0;
+	float ups_pwr = 0;
 	float ps_vout = 10;
 };
 

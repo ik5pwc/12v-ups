@@ -13,6 +13,7 @@
 #include "io.h"
 
 
+
 static float adc_voltage(uint16_t adc);
 static float adc_current(uint16_t adc);
 
@@ -115,39 +116,24 @@ void read_sensor (dc_out_t *dc) {
   digitalWrite (AMUX1, mux & 0x01);
   digitalWrite (AMUX2, mux & 0x02);
   delay(WAIT_MUX_MS);                   // time propagation for CD4052a
-/*
-  // Read analog data
-  read[4] = analogRead(A4); if (read[4] < ADC_LOW_LIMIT ) {read[4] = 0;}
-  read[3] = analogRead(A3); if (read[3] < ADC_LOW_LIMIT ) {read[3] = 0;}
-  read[2] = analogRead(A2); if (read[2] < ADC_LOW_LIMIT ) {read[2] = 0;}
-  read[1] = analogRead(A1); if (read[1] < ADC_LOW_LIMIT ) {read[1] = 0;}
-  read[0] = analogRead(A0); if (read[0] < ADC_LOW_LIMIT ) {read[0] = 0;}
 
-*/
-  // Perform multiple readings
-  Serial.println(mux,HEX);
+  // Perform multiple readings for each input
   for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[0] += analogRead(A0);}
   read[0] = read[0]/ANALOG_READ_PASSES;
-  Serial.print(read[0]); Serial.print ("     "); Serial.println(adc_voltage(read[0]));
 
   for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[1] += analogRead(A1);}
   read[1] = read[1]/ANALOG_READ_PASSES ;
-  Serial.println(adc_voltage(read[1]));
 
   for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[2] += analogRead(A2);}
   read[2] = read[2]/ANALOG_READ_PASSES;
-  Serial.println(read[2]);
 
   for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[3] += analogRead(A3);}
   read[3] = read[3]/ANALOG_READ_PASSES;
-  Serial.println(read[3]);
 
   for (uint8_t i=0; i<ANALOG_READ_PASSES ; i++) {read[4] += analogRead(A4);}
   read[4] = read[4]/ANALOG_READ_PASSES;
-  Serial.println(read[4]);
 
-
-  // Battery voltage are always the same
+  // Battery voltage are always present
   dc->m1_vbat = adc_voltage(read[2]) * SCALE_VOLTAGE;
   dc->m2_vbat = adc_voltage(read[3]) * SCALE_VOLTAGE;
   dc->m3_vbat = adc_voltage(read[4]) * SCALE_VOLTAGE;
@@ -181,11 +167,64 @@ void read_sensor (dc_out_t *dc) {
 }
 
 
-
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: adc_voltage
+ * -------------------------------
+ * Return voltage measured from ADC, including factor correction
+ *
+ * Invoked by:
+ * . read_sensor        (io.cpp)
+ *
+ * Called Sub/Functions: NONE
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used: NONE
+ *
+ * Pre Processor Macro:
+ * . ADC_ERR_VOLTAGE    (params.h)
+ *
+ * Struct: NONE
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+* . adc: the value from ADC
+*/
 float adc_voltage(uint16_t adc) { return ((float)adc - ADC_ERR_VOLTAGE ) * 5 / 1023;}
 
-float adc_current(uint16_t adc) {return ((( (float)adc - ADC_ERR_CURRENT ) * 5 / 1023) - 2.5) * CURRENT_SENSOR_MAX /2 ;}
+
+
 /*----------------------------------------------------------------------------------------------------------------------
+ * Function: adc_current
+ * -------------------------------
+ * Return current measured from ADC, including factor correction
+ *
+ * Invoked by:
+ * . read_sensor        (io.cpp)
+ *
+ * Called Sub/Functions: NONE
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used: NONE
+ *
+ * Pre Processor Macro:
+ * . ADC_ERR_CURRENT    (params.h)
+ * . CURRENT_SENSOR_MAX (params.h)
+ *
+ * Struct: NONE
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+ * . adc: the value from ADC
+*/
+float adc_current(uint16_t adc) {return ((( (float)adc - ADC_ERR_CURRENT ) * 5 / 1023) - 2.5) * CURRENT_SENSOR_MAX /2 ;}
+
+
+
+ /*----------------------------------------------------------------------------------------------------------------------
  * Function: init_pin
  * -------------------------------
  * Initialize Arduino PIN

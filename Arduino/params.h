@@ -79,6 +79,9 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 #define AMUX1 8                      // Multiplexer A pin
 #define AMUX2 9                      // Multiplexer B pin
 
+#define MQTTSUPPORT  1
+#define MQTTBROKER   "192.168.95.124"
+#define MQTTPORT     1883
 
 /* ----------------------------------------------------------------------------------------------------------------
  *                                              PARAMS CONFIGURATION END
