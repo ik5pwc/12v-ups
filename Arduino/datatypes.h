@@ -61,19 +61,16 @@ struct dc_out_t {
 	float m1_iout = 0;
 	float m1_ibat = 0;
 	float m1_vbat = 0;
-	float m1_pwr  = 0;
 	float m2_iout = 0;
 	float m2_ibat = 0;
 	float m2_vbat = 0;
-	float m2_pwr  = 0;
 	float m3_iout = 0;
 	float m3_ibat = 0;
 	float m3_vbat = 0;
-	float m3_pwr  = 0;
 	float ups_vout = 0;
 	float ups_itot = 0;
 	float ups_pwr = 0;
-	float ps_vout = 10;
+	float ps_vout = 0;
 };
 
 

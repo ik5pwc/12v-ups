@@ -23,7 +23,7 @@
 
 /* -------- Public functions --------- */
 void lcd_init();
-void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key);
+void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key, bool update);
 
 
 /* ------------- Macros ------------- */

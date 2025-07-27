@@ -28,10 +28,10 @@
 
 /* ------------- Enum ------------- */
 enum read_sensor_state_t : uint8_t {
-	mux0 = 0xB0,
-	mux1 = 0xB1,
-	mux2 = 0xB2,
-	mux3 = 0xB3
+	mux0 = 0xC0,
+	mux1 = 0xC1,
+	mux2 = 0xC2,
+	mux3 = 0xC3
 };
 
 

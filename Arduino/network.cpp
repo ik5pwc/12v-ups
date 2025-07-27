@@ -15,29 +15,115 @@
 /* ------- private global variables -------- */
 static EthernetServer g_netserver = EthernetServer(PORT);     // Ethernet telnet server
 static EthernetClient g_netclient;                            // Ethernet Client
-static char g_reply[320];                                     // Telnet reply
+static char g_reply[50];                                      // Telnet reply
 static MQTTClient g_mqtt_publisher;                           // MQTT client for publisher
 
 
 /* ---- Static functions (i.e. callable only within this file) ----- */
-static void build_reply (dc_out_t *dc);
-static void append (char str[],uint16_t *pos);
+void build_reply(dc_out_t *dc, uint8_t row);
 
 
+
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: manage_mqtt
+ * -------------------------------
+ * Send data to mqtt broker
+ *
+ * Invoked by:
+ * . loop               (UPSMonitor.ino)
+ *
+ * Called Sub/Functions: NONE
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used:
+ *  . g_mqtt_publisher  (network.cpp)
+ *
+ * Pre Processor Macro:
+ * . MQTTCLIENTID       (params.h)
+ * . MQTTTOPIC          (params.h)
+ *
+ * Struct:
+ *  . dc_out_t          (datatypes.h)
+ *
+ * Enum: NONE
+ *
+ * Arguments:
+ * . *dc: pointer to adc_out_t struct containing electric measures
+*/
 void manage_mqtt(dc_out_t *dc) {
-  static uint8_t mqtt_timeout = DATA_REFRESH;
-
-	// Update MQTT timer
-	if ( (millis() / 1000 ) % 2 == mqtt_timeout % 2 ) { mqtt_timeout--;}
+  char value[7];               // For converting float to string
+  char topic[50];               // Topic name
 
 	// If broker is not connected, try reconnecting
 	if (! g_mqtt_publisher.connected() ){ g_mqtt_publisher.connect(MQTTCLIENTID); }
 
-  if (g_mqtt_publisher.connected() && mqtt_timeout == 0 ) {
+  // If connected and time expired, publish data
+	if (g_mqtt_publisher.connected()) {
 
-		g_mqtt_publisher.publish("/hello", "world");
-    // Reset refresh timer
-  	mqtt_timeout = DATA_REFRESH;
+    // UPS status
+		strcpy(topic,MQTTTOPIC);strcat(topic,"/status");
+		if (dc->ps_vout > 5 ) { g_mqtt_publisher.publish(topic,F("AC Power"));} else {g_mqtt_publisher.publish(topic,F("Battery"));}
+
+		// UPS Vout
+		dtostrf(dc->ups_vout, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/out/volt");
+		g_mqtt_publisher.publish(topic,value);
+
+    // UPS Iout
+		dtostrf(dc->ups_itot, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/out/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Load Power
+		dtostrf(dc->ups_pwr, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/out/watt");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 1 out current
+		dtostrf(dc->m1_iout, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m1/out/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 1 Battery Voltage
+		dtostrf(dc->m1_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m1/bat/volt");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 1 Battery Current
+		dtostrf(dc->m1_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m1/bat/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 2 out current
+		dtostrf(dc->m2_iout, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m2/out/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 2 Battery Voltage
+		dtostrf(dc->m2_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m2/bat/volt");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 2 Battery Current
+		dtostrf(dc->m2_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m2/bat/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 3 out current
+		dtostrf(dc->m3_iout, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m3/out/amp");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 3 Battery Voltage
+		dtostrf(dc->m3_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m3/bat/volt");
+		g_mqtt_publisher.publish(topic,value);
+
+    // Module 3 Battery Current
+		dtostrf(dc->m3_vbat, 4, 2, value);
+  	strcpy(topic,MQTTTOPIC);strcat(topic,"/m3/bat/amp");
+		g_mqtt_publisher.publish(topic,value);
   }
 }
 
@@ -136,7 +222,7 @@ void init_network(network_t *net) {
   net->ip[3] = Ethernet.localIP()[3];  net->mask[3] = Ethernet.subnetMask()[3];  net->gw[3] = Ethernet.gatewayIP()[3];
 
 	// Start server
-	g_netserver.begin();
+	//g_netserver.begin();
 }
 
 
@@ -243,14 +329,10 @@ void manage_ip(network_t *net) {
  * Arguments:
  * . *dc: pointer to adc_out_t struct containing electric measures
 */
-void manage_network(dc_out_t* dc) {
-  char rx_buffer[50];                           // Buffer for data sent by client
 
+void manage_network(dc_out_t* dc, bool update) {
+  char rx_buffer[10];                           // Buffer for data sent by client
   bool close_conn = false;                      // If set to true disconnect client
-  static uint8_t timer = DATA_REFRESH ;     // Timer for sending data to client
-
-	// Update Last sent timer
-	if ( (millis() / 1000 ) % 2 == timer % 2 ) { timer--;}
 
   // Create a client object to manage data from client (if any)
 	EthernetClient telnet_client = g_netserver.available();
@@ -270,15 +352,12 @@ void manage_network(dc_out_t* dc) {
 		if (close_conn) {telnet_client.stop();}
 
 		// Send data to client
-		build_reply(dc);
-		telnet_client.write(g_reply);
+		for (uint8_t i=0; i<=6;i++) {build_reply(dc,i);	telnet_client.write(g_reply);}
 	}
 
 	// If timer expired, send data and reset timer
-	if (timer == 0) {
-		build_reply(dc);
-		g_netserver.write(g_reply);
-		timer = DATA_REFRESH;
+	if (update) {
+		for (uint8_t i=0; i<=6;i++) {build_reply(dc,i);	g_netserver.write(g_reply);}
   }
 }
 
@@ -310,91 +389,64 @@ void manage_network(dc_out_t* dc) {
  * Arguments:
  * . *dc: pointer to adc_out_t struct containing electric measures
 */
-void build_reply(dc_out_t *dc) {
-	uint16_t last = 0;
+void build_reply(dc_out_t *dc, uint8_t row) {
   char value[7];         // For converting float to string
-
 
 	// Cleanup reply buffer
 	for (uint16_t i = 0; i < sizeof(g_reply); i++) {g_reply[i]=0x20;}
-	//g_reply[sizeof(g_reply)]=0x00;
+  switch (row) {
+    case 0:
+  		strcpy(g_reply,"|[?25l|[2J|[1;1H");   // Telnet commands to:
+					                                  // [?25l --> Disable cursor blinking
+			    																	// [2J   --> Clear screen
+			                                      // [1;1H --> Set cursor to position 1,1
+					                                  // | is the escape char (0x1B) which is not printable
+  		// Now replace | with escape char 0X1B
+      for (uint16_t i = 0; i < sizeof(g_reply); i++) { if (g_reply[i] == 0x7C ) {g_reply[i] = 0x1b;}}
+      strcat(g_reply,"DC UPSMonitor\n\n");
+      break;
 
-	g_reply[last] = 0x1b; last++;  // Disable cursor blinking
-	append("[?25l", &last);
+    case 1: // out status
+    	if (dc->ps_vout > 5 ) {strcpy(g_reply,"AC Input\n");} else {strcpy(g_reply,"Battery\n");}
+      strcat(g_reply, "Out -> ");
+      dtostrf(dc->ups_vout, 4, 2, value);
+      strcat(g_reply,value);
+      strcat(g_reply,"V  ");
+      dtostrf(dc->ups_itot, 4, 2, value);
+      strcat(g_reply,value);
+      break;
 
-	g_reply[last] = 0x1b; last++;  // Clear screen
-	append("[2J", &last);
+    case 2:
+      strcpy(g_reply,"A ");
+      dtostrf(dc->ups_pwr, 4, 2, value);
+      strcat(g_reply,value);
+      strcat(g_reply,"W\n\n");
+    	break;
 
-	g_reply[last] = 0x1b; last++;  // Set cursor coordinates
-	append("[1;1H", &last);
+    case 3:
+      strcpy(g_reply,"M1 -> ");
+      strcat(g_reply,"Iout:");  dtostrf(dc->m1_iout, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Ibat:");  dtostrf(dc->m1_ibat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Vbat:");  dtostrf(dc->m1_vbat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "V\n");
+      break;
 
-  append ("DC UPSMonitor\n", &last);
-  append ("-------------\n\n", &last);
-  append ("Status: AC Input\n", &last);
+    case 4:
+      strcpy(g_reply,"M2 -> ");
+      strcat(g_reply,"Iout:");  dtostrf(dc->m2_iout, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Ibat:");  dtostrf(dc->m2_ibat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Vbat:");  dtostrf(dc->m2_vbat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "V\n");
+      break;
 
-  append ("Vout  : ", &last);
-  dtostrf(dc->ups_vout, 4, 2, value);
-  append (value, &last);
-  append (" V\n\n", &last);
+    case 5:
+      strcpy(g_reply,"M3 -> ");
+      strcat(g_reply,"Iout:");  dtostrf(dc->m3_iout, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Ibat:");  dtostrf(dc->m3_ibat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "A ");
+      strcat(g_reply,"Vbat:");  dtostrf(dc->m3_vbat, 4, 2, value); strcat(g_reply,value); strcat(g_reply, "V\n");
+      break;
 
-  // Module 1
-  append ("Module 1 --> ", &last);
-  append ("Iout: ", &last);  dtostrf(dc->m1_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Ibat: ", &last);  dtostrf(dc->m1_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Vbat: ", &last);  dtostrf(dc->m1_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
-
-  // Module 2
-  append ("Module 2 --> ", &last);
-  append ("Iout: ", &last);  dtostrf(dc->m2_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Ibat: ", &last);  dtostrf(dc->m2_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Vbat: ", &last);  dtostrf(dc->m2_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
-
-  // Module 3
-  append ("Module 3 --> ", &last);
-  append ("Iout: ", &last);  dtostrf(dc->m3_iout, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Ibat: ", &last);  dtostrf(dc->m3_ibat, 4, 2, value); append(value, &last); append(" A  ", &last);
-  append ("Vbat: ", &last);  dtostrf(dc->m3_vbat, 4, 2, value); append(value, &last); append(" V\n", &last);
-
-  append ("\nPress X to disconnect\n", &last);
-}
-
-
-
-/*----------------------------------------------------------------------------------------------------------------------
- * Function: append
- * -------------------------------
- * Append a string to reply message
- *
- * Invoked by:
- * . build_reply        (network.cpp)
- *
- * Called Sub/Functions: NONE
- *
- * Global Const Used: NONE
- *
- * Global variables used:
- *  . g_reply           (network.cpp)
- *
- * Pre Processor Macro: NONE
- *
- * Struct: NONE
- *
- * Enum: NONE
- *
- * Arguments:
- * . str: string to append
- * . pos: where to append the string within g_reply global object
-*/
-void append (char str[],uint16_t *pos){
-  uint8_t i = 0;  // Track position within string to append
-  //Serial.print(str); Serial.print("  ");Serial.println(*pos);
-
-  // Append data to g_reply until NUL is found
-  while (str[i] != 0x00) {
-   g_reply[*pos + i] = str[i];
-   i++;
+    case 6:
+    	strcpy(g_reply,"\nX to exit\n");
+    	break;
   }
-
-  // Update current position
-  *pos+= i;
 }
+

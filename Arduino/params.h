@@ -90,8 +90,6 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 #define MQTTTOPIC    "home/net/dcups"
 #define MQTTCLIENTID "net-dc-ups"
 
-#define DEBUG 0                       // SET TO 0 OUT TO REMOVE TRACES
-
 
 
 /* ----------------------------------------------------------------------------------------------------------------

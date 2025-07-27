@@ -31,7 +31,7 @@
 void init_network(network_t *net);
 void init_mqtt();
 void manage_ip(network_t *net);
-void manage_network(dc_out_t *dc);
+void manage_network(dc_out_t *dc, bool update);
 void manage_mqtt (dc_out_t *dc);
 
 

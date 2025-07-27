@@ -23,8 +23,6 @@
 #include "lcd.h"
 #include "io.h"
 
-
-//TODO: mettere le letture potenza in telnet
 //TODO: mettere lo stato del MQTT (connesso)
 
 
@@ -35,7 +33,7 @@ static struct network_t  g_netstatus;   // Define globally network status
 //The setup function is called once at startup of the sketch
 void setup(){
   // Debugging
-  Serial.println(9600);
+  //Serial.begin(9600);
 
   // Init LCD
   lcd_init();
@@ -49,8 +47,16 @@ void setup(){
 
 // The loop function is called in an endless loop
 void loop(){
-	static struct dc_out_t  dcstatus;         // hold sensor readings
-	static key_status_t     button = off;     // hold buttons
+	static struct dc_out_t  dcstatus;               // hold sensor readings
+	static key_status_t     button = off;           // hold buttons
+	static uint8_t refresh_timer = DATA_REFRESH;    // Data refresh timer
+  bool refresh = false;                           // When set to true, tell child function to send an update
+
+	// Update Data Refresh timer
+	if ( (millis() / 1000 ) % 2 == refresh_timer % 2 ) { refresh_timer--;}
+
+	// If timer expired, set refresh indicator to true and reset timer else set indicator to false
+ 	if (refresh_timer == 0) { refresh = true; refresh_timer = DATA_REFRESH; } else { refresh = false; }
 
 	// If dynamic address is in use, renew or try to get a new one
 	if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
@@ -62,11 +68,11 @@ void loop(){
 	button = read_keys_analog();
 
 	// Update display
-	lcd_operate(&dcstatus, &g_netstatus, &button);
+	lcd_operate(&dcstatus, &g_netstatus, &button, refresh);
 
 	// Manage telnet clients
-	manage_network(&dcstatus);
+	manage_network(&dcstatus, refresh);
 
-  // if enabled, manage MQTT connection
-	if (MQTTSUPPORT) {manage_mqtt( &dcstatus);}
+  // if enabled, send data to MQTT broker
+	if (MQTTSUPPORT && refresh) {manage_mqtt( &dcstatus);}
 }

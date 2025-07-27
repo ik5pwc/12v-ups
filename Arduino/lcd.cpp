@@ -20,7 +20,8 @@
 /* ---- Static functions (i.e. callable only within this file) ----- */
 static void lcd_print_general (dc_out_t *dc);
 static void lcd_print_module (dc_out_t *dc, uint8_t module);
-static void lcd_print_net (char name[], uint8_t  val[4]);
+//static void lcd_print_net (char name[], uint8_t  val[4]);
+static void lcd_print_net (uint8_t type, uint8_t  val[4]);
 
 
 /* ------- global variables -------- */
@@ -107,17 +108,13 @@ void lcd_init() {
  * . p_operate: a pointer to the struct managing controller status
  * . p_settings: pointer to the struct storing controller's settings
 */
-void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
+void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key, bool update) {
   static uint8_t page_timeout = 0;                   // Timer for moving to next page
-  static uint8_t refresh_timeout = DATA_REFRESH;     // Refresh timeout
   static lcd_page_t lcd_page  = general;             // LCD Page to display
 
   // update timer (manual page scrolling)
   if (page_timeout > 0 &&  (millis() / 1000 ) % 2 == page_timeout % 2 ) { page_timeout--;}
   if (page_timeout == 0 ) { lcd_page = general;}  // if timer expired, return to main page
-
-  // Update refresh timer
-  if ((millis() / 1000 ) % 2 == refresh_timeout % 2 ) { refresh_timeout--;}
 
   // Key button pressed ?
   if (*key == on) {
@@ -129,21 +126,18 @@ void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
   }
 
 
-  // Update LCD if timer expired or key was pressed
-  if ( refresh_timeout  == 0 || *key == on ) {
+  // Update LCD if refresh timer expired timer expired or key was pressed
+  if ( update || *key == on ) {
   	g_lcd.clear();
     switch (lcd_page) {
     	case general: lcd_print_general (sensor); break;
     	case module1: lcd_print_module (sensor,1); break;
     	case module2: lcd_print_module (sensor,2); break;
     	case module3: lcd_print_module (sensor,3); break;
-    	case ip     : lcd_print_net ("IP Address",net->ip); break;
-    	case subnet : lcd_print_net ("Subnet mask", net->mask); break;
-    	case gateway: lcd_print_net ("Gateway", net->gw); break;
+    	case ip     : lcd_print_net (0,net->ip); break;
+    	case subnet : lcd_print_net (1, net->mask); break;
+    	case gateway: lcd_print_net (2, net->gw); break;
   	}
-
-    // update refresh timer
-    refresh_timeout = DATA_REFRESH;
   }
 }
 
@@ -180,7 +174,7 @@ void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
 void lcd_print_general (dc_out_t *dc) {
 	// 1st row
 	g_lcd.setCursor(0, 0);
-	if (dc->ps_vout != 0) {g_lcd.print("AC Power"); } else {g_lcd.print("Battery"); }
+	if (dc->ps_vout != 0) {g_lcd.print(F("AC Power")); } else {g_lcd.print(F("Battery")); }
   g_lcd.setCursor(10, 0);
   g_lcd.print(dc->ups_vout,2);g_lcd.print("V");
 
@@ -226,7 +220,7 @@ void lcd_print_module (dc_out_t *dc, uint8_t module) {
 
 	// First row
 	g_lcd.print("M"); g_lcd.print(module);
-	g_lcd.print (" Iout ");
+	g_lcd.print (F(" Iout "));
 	switch (module) {
 	  case 1: g_lcd.print(dc->m1_iout,2); break;
 	  case 2: g_lcd.print(dc->m2_iout,2); break;
@@ -276,13 +270,17 @@ void lcd_print_module (dc_out_t *dc, uint8_t module) {
  * Enum: NONE
  *
  * Arguments:
- * . name: the string to print in first line
+ * . type: integer to set the tile (0: ip address, 1: subnet mask, 2: Gateway)
  * . value: an array of 4 integer representing IP/subnet or gateway
 */
-static void lcd_print_net (char name[], uint8_t  val[4]) {
+static void lcd_print_net (uint8_t type, uint8_t  val[4]) {
 	// First row
 	g_lcd.setCursor(0, 0);
-	g_lcd.print(name);
+	switch (type) {
+	  case 0: g_lcd.print(F("IP Address")); break;
+	  case 2: g_lcd.print(F("Subnet mask")); break;
+	  case 3: g_lcd.print(F("Gateway")); break;
+	}
 
 	// Second row
 	g_lcd.setCursor(0, 1);
