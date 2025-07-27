@@ -35,7 +35,7 @@ static struct network_t  g_netstatus;   // Define globally network status
 //The setup function is called once at startup of the sketch
 void setup(){
   // Debugging
-  Serial.begin(9600);
+  Serial.println(9600);
 
   // Init LCD
   lcd_init();
@@ -43,14 +43,14 @@ void setup(){
   // Ethernet init
 	init_network(&g_netstatus);
 
-	// Init mqtt support
+	// Init mqtt support (if enabled)
 	if (MQTTSUPPORT) {init_mqtt();}
 }
 
 // The loop function is called in an endless loop
 void loop(){
-	static struct dc_out_t   dcstatus;         // hold sensor readings
-	static key_status_t button = off;          // hold buttons
+	static struct dc_out_t  dcstatus;         // hold sensor readings
+	static key_status_t     button = off;     // hold buttons
 
 	// If dynamic address is in use, renew or try to get a new one
 	if (g_netstatus.dhcp) {manage_ip(&g_netstatus);}
@@ -67,6 +67,6 @@ void loop(){
 	// Manage telnet clients
 	manage_network(&dcstatus);
 
-  // if enabled, send to MQTT Broker
-	//if (MQTTSUPPORT) {manage_mqtt( &dcstatus);}
+  // if enabled, manage MQTT connection
+	if (MQTTSUPPORT) {manage_mqtt( &dcstatus);}
 }

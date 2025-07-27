@@ -44,7 +44,7 @@
 		<link>
 			<name>libraries/Ethernet</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/Ethernet/2.0.2</locationURI>
+			<location>/home/lc@civinini.home/Arduino/libraries/Ethernet</location>
 		</link>
 		<link>
 			<name>libraries/LiquidCrystal</name>
@@ -54,7 +54,7 @@
 		<link>
 			<name>libraries/MQTT</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/MQTT/2.5.2</locationURI>
+			<location>/home/lc@civinini.home/Arduino/libraries/MQTT</location>
 		</link>
 		<link>
 			<name>libraries/SPI</name>

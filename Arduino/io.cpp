@@ -97,16 +97,6 @@ key_status_t read_keys_analog() {
  * . p_operate: a pointer to struct containing controller status
  * . p_settings: pointer to struct containing controller configuration
  *
- * +--------------------------------+--------------+------------------------------+
- * |    CONTROLLER STATUS           | LED_RUNNING  | LED_AUTOMODE                 |
- * +--------------------------------+--------------+------------------------------+
- * | Configuration mode             | BLINK normal | OFF                          |
- * | Manual mode                    | BLINK normal | OFF                          |
- * | Normal Operation               | BLINK normal | ON                           |
- * | All antennas disconnected      | BLINK fast   | BLINK fast (alternate)       |
- * | No freq/invalid band           | BLINK fast   | ON/OFF based on current mode |
- * | No antenna for selected band   | BLINK fast   | BLINK slow                   |
- * +--------------------------------+--------------+------------------------------+
 */
 void read_sensor (dc_out_t *dc) {
   static read_sensor_state_t mux = mux0;

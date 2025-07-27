@@ -56,7 +56,7 @@ LiquidCrystal g_lcd(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7); // @suppres
  * Arguments: NONE
 */
 void lcd_init() {
-  // Initialize the display and clear the content
+	// Initialize the display and clear the content
   g_lcd.begin(LCD_COLS, 2);
   g_lcd.clear();
 
@@ -108,28 +108,29 @@ void lcd_init() {
  * . p_settings: pointer to the struct storing controller's settings
 */
 void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
-  static uint8_t page_timeout = 1;           // Timer for moving to next page
-  static lcd_page_t lcd_page  = gateway;     // LCD Page to display
+  static uint8_t page_timeout = 0;                   // Timer for moving to next page
+  static uint8_t refresh_timeout = DATA_REFRESH;     // Refresh timeout
+  static lcd_page_t lcd_page  = general;             // LCD Page to display
 
-  // update timer
-  if ( (millis() / 1000 ) % 2 == page_timeout % 2 ) { page_timeout--;}
+  // update timer (manual page scrolling)
+  if (page_timeout > 0 &&  (millis() / 1000 ) % 2 == page_timeout % 2 ) { page_timeout--;}
+  if (page_timeout == 0 ) { lcd_page = general;}  // if timer expired, return to main page
+
+  // Update refresh timer
+  if ((millis() / 1000 ) % 2 == refresh_timeout % 2 ) { refresh_timeout--;}
 
   // Key button pressed ?
   if (*key == on) {
   	// Move to next page or jump to beginning if last one
   	if (lcd_page == gateway ){ lcd_page = general;} else {lcd_page = lcd_page + 1;}
 
-  	// Reset timer to 2 * standard timer
-  	page_timeout = MANUAL_TIMEOUT_SCALE * PAGE_TIMEOUT_SEC;
+  	// Reset page timeout
+  	page_timeout = PAGE_TIMEOUT_SEC;
   }
 
-    // Page timer expired?
-  if (page_timeout == 0 ) {
-    if (lcd_page >= module3 ){ lcd_page = general;} else {lcd_page = lcd_page + 1;}   // move to next page until the last one
-  }
 
   // Update LCD if timer expired or key was pressed
-  if ( (page_timeout == 0) || *key == on ) {
+  if ( refresh_timeout  == 0 || *key == on ) {
   	g_lcd.clear();
     switch (lcd_page) {
     	case general: lcd_print_general (sensor); break;
@@ -140,10 +141,10 @@ void lcd_operate (dc_out_t *sensor, network_t *net, key_status_t *key) {
     	case subnet : lcd_print_net ("Subnet mask", net->mask); break;
     	case gateway: lcd_print_net ("Gateway", net->gw); break;
   	}
-  }
 
-  // reset timers if expired
-	if (page_timeout == 0) {page_timeout = PAGE_TIMEOUT_SEC;}
+    // update refresh timer
+    refresh_timeout = DATA_REFRESH;
+  }
 }
 
 

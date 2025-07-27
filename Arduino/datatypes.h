@@ -15,6 +15,7 @@
 
 // Include arduino header
 #include <Arduino.h>
+#include "params.h"
 
 
 
@@ -76,30 +77,20 @@ struct dc_out_t {
 };
 
 
+// Define custom debug
+#if DEBUG
+#define D_begin(...) Serial.begin(__VA_ARGS__);
+#define D_print(...)    Serial.print(__VA_ARGS__)
+#define D_write(...)    Serial.write(__VA_ARGS__)
+#define D_println(...)  Serial.println(__VA_ARGS__)
+#else
+#define D_begin(...)
+#define D_print(...)
+#define D_write(...)
+#define D_println(...)
+#endif
 
 
-/* ----------------------------------------------------------------------------------------------------------------
- *                                    CONSTs (SCALING FACTORS)
- * ----------------------------------------------------------------------------------------------------------------
-*/
 
-
-/*
-const hamband_t  hambands[HAM_BANDS +1] PROGMEM = {
-  {.meters = 0  , .f_start = 0    ,  .f_end = 0      },   // INVALID: returned when frequency is out any band
-  {.meters = 160, .f_start = 1800 ,  .f_end = 1900   },   // 160M
-  {.meters = 80 , .f_start = 3500 ,  .f_end = 3800   },   // 80M
-  {.meters = 40 , .f_start = 7000 ,  .f_end = 7200   },   // 40M
-  {.meters = 30 , .f_start = 10100,  .f_end = 10150  },   // 30M
-  {.meters = 20 , .f_start = 14000,  .f_end = 14350  },   // 20M
-  {.meters = 17 , .f_start = 18068,  .f_end = 18168  },   // 17M
-  {.meters = 15 , .f_start = 21000,  .f_end = 21450  },   // 15M
-  {.meters = 13 , .f_start = 24890,  .f_end = 24990  },   // 13M
-  {.meters = 10 , .f_start = 28000,  .f_end = 29700  },   // 10M
-  {.meters = 6  , .f_start = 50000,  .f_end = 51000  },   // 6M
-  {.meters = 4  , .f_start = 70100,  .f_end = 70300  },   // 4M
-  {.meters = 2  , .f_start = 144000, .f_end = 146000 }    // 2M
-};
-*/
 // end of define guard
 #endif

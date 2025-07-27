@@ -15,8 +15,8 @@
 /* ------- private global variables -------- */
 static EthernetServer g_netserver = EthernetServer(PORT);     // Ethernet telnet server
 static EthernetClient g_netclient;                            // Ethernet Client
-static char g_reply[512];                                     // Telnet reply
-static MQTTClient g_mqtt_publisher (g_netclient);             // MQTT client for publisher
+static char g_reply[320];                                     // Telnet reply
+static MQTTClient g_mqtt_publisher;                           // MQTT client for publisher
 
 
 /* ---- Static functions (i.e. callable only within this file) ----- */
@@ -24,24 +24,54 @@ static void build_reply (dc_out_t *dc);
 static void append (char str[],uint16_t *pos);
 
 
+void manage_mqtt(dc_out_t *dc) {
+  static uint8_t mqtt_timeout = DATA_REFRESH;
+
+	// Update MQTT timer
+	if ( (millis() / 1000 ) % 2 == mqtt_timeout % 2 ) { mqtt_timeout--;}
+
+	// If broker is not connected, try reconnecting
+	if (! g_mqtt_publisher.connected() ){ g_mqtt_publisher.connect(MQTTCLIENTID); }
+
+  if (g_mqtt_publisher.connected() && mqtt_timeout == 0 ) {
+
+		g_mqtt_publisher.publish("/hello", "world");
+    // Reset refresh timer
+  	mqtt_timeout = DATA_REFRESH;
+  }
+}
+
+
+/*----------------------------------------------------------------------------------------------------------------------
+ * Function: init_mqtt
+ * -------------------------------
+ * Initialize MQTT operation.
+ *
+ * Invoked by:
+ * . setup              (UPSMonitor.ino)
+ *
+ * Called Sub/Functions: NONE
+ *
+ * Global Const Used: NONE
+ *
+ * Global variables used:
+ *  . g_mqtt_publisher  (network.cpp)
+ *
+ * Pre Processor Macro:
+ *  . MQTTBROKER        (params.h)
+ *  . MQTTPORT          (params.h)
+ *
+ * Struct: NONE
+ *
+ * Enum: NONE
+ *
+ * Arguments: NONE
+*/
 void init_mqtt() {
+	// Configure the broker (IP hard-coded in the software)
 	g_mqtt_publisher.begin(MQTTBROKER,MQTTPORT,g_netclient);
 }
 
-void manage_mqtt(dc_out_t *dc) {
-	g_mqtt_publisher.loop();
-
-	// Test if broker is connected
-	if (! g_mqtt_publisher.connected() ){
-		Serial.println ("ppp");
-		// Connect to broker
-		g_mqtt_publisher.connect("net-dc-ups");
-
-		delay (15000);
-		g_mqtt_publisher.subscribe("net-dc-ups");
-	}
-
-}
 
 
 /*----------------------------------------------------------------------------------------------------------------------
@@ -54,10 +84,10 @@ void manage_mqtt(dc_out_t *dc) {
  *
  * Called Sub/Functions: NONE
  *
- * Global Const Used:
- *  . g_netserver       (network.cpp)
+ * Global Const Used: NONE
  *
- * Global variables used: NONE
+ * Global variables used:
+ *  . g_netserver       (network.cpp)
  *  . static_ip         (params.h)
  *  . static_mask       (params.h)
  *  . static_gw         (params.h)
@@ -74,7 +104,6 @@ void manage_mqtt(dc_out_t *dc) {
  * . *net: pointer to a network_t struct containing current network config
 */
 void init_network(network_t *net) {
-
 	// Compute the MAC Address from static IP
 	net->mac[3] = static_ip[0]; net->mac[4] = static_ip[1];
 	net->mac[5] = static_ip[2]; net->mac[6] = static_ip[3];
@@ -87,6 +116,7 @@ void init_network(network_t *net) {
 		// DHCP is enabled, try to get IP address and use failback if assignment go wrong
 		if (Ethernet.begin(net->mac,20000,10000) == 1) {
 			net->dhcp = assigned;
+			D_print("DHCP "); D_print (Ethernet.localIP());
 		} else {
 			Ethernet.begin(net->mac,static_ip,{0,0,0,0},static_gw, static_mask);
 		  net->dhcp = fallback;
@@ -139,13 +169,12 @@ void init_network(network_t *net) {
 void manage_ip(network_t *net) {
   uint8_t ret = 0;    // Return value for renew or discover function
 
-	// Update DHCP Timer
+  // Update DHCP Timer
 	if ( (millis() / 1000 ) % 2 == net->dhcp_timer % 2 ) { net->dhcp_timer--;}
 
 	// Check if timer expired
 	if (net->dhcp_timer == 0) {
-
-    switch (net->dhcp) {
+		switch (net->dhcp) {
 	    case assigned:
 	    	// IP was previously assigned, try renew
 	    	ret = Ethernet.maintain();
@@ -185,7 +214,6 @@ void manage_ip(network_t *net) {
 
 
 
-
 /*----------------------------------------------------------------------------------------------------------------------
  * Function: manage_network
  * -------------------------------
@@ -219,7 +247,7 @@ void manage_network(dc_out_t* dc) {
   char rx_buffer[50];                           // Buffer for data sent by client
 
   bool close_conn = false;                      // If set to true disconnect client
-  static uint8_t timer = REFRESH_INTERVAL ;     // Timer for sending data to client
+  static uint8_t timer = DATA_REFRESH ;     // Timer for sending data to client
 
 	// Update Last sent timer
 	if ( (millis() / 1000 ) % 2 == timer % 2 ) { timer--;}
@@ -250,7 +278,7 @@ void manage_network(dc_out_t* dc) {
 	if (timer == 0) {
 		build_reply(dc);
 		g_netserver.write(g_reply);
-		timer = REFRESH_INTERVAL;
+		timer = DATA_REFRESH;
   }
 }
 

@@ -18,14 +18,13 @@
 #include <Arduino.h>              // Include arduino headers
 #include "params.h"               // Include program params
 #include "datatypes.h"            // Include custom data types
-#include <SPI.h>
 #include <Ethernet.h>
+#include <SPI.h>
 #include <MQTT.h>
 
 
 /* ------------ Network Macro ------- */
 #define DHCP_TIMER_SEC 600    // Seconds after renew or rebind is tried
-#define REFRESH_INTERVAL 5    // After often send update data to connected clients
 
 
 /* -------- Public functions --------- */
