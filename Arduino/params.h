@@ -83,7 +83,7 @@ const uint8_t static_gw[]   = {192,168,255,1};      // Gateway - used also as fa
 #define MQTTSUPPORT  1              // Set to 1 to enable MQTT
 
 // MQTT Broker settings
-#define MQTTBROKER   "192.168.95.124"
+#define MQTTBROKER   "192.168.95.6"
 #define MQTTPORT     1883
 
 // MQTT Root topic & client ID
