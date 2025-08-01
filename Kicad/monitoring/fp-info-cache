@@ -1,4 +1,4 @@
-25988169489872261
+25988250244832900
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -60787,126 +60787,126 @@ heatsink
 0
 0
 0
-IK5PWC
+IK5PWC_footprint
 30CPF04
 TO-247-3, Vertical, RM 5.45mm, see https://toshiba.semicon-storage.com/us/product/mosfet/to-247-4l.html
 TO-247-3 Vertical RM 5.45mm
 0
 3
 2
-IK5PWC
+IK5PWC_footprint
 Arduino_Nano_large_pads
 Arduino Nano, http://www.mouser.com/pdfdocs/Gravitech_Arduino_Nano3_0.pdf
 Arduino Nano
 0
 30
 30
-IK5PWC
+IK5PWC_footprint
 D_IDEAL_no_GND
 
 
 0
 4
 2
-IK5PWC
+IK5PWC_footprint
 D_IDEAL_with_GND
 terminal block Metz Connect Type703_RT10N02HGLU, 2 pins, pitch 9.52mm, size 19x12.5mm^2, drill diamater 1.3mm, pad diameter 2.6mm, see http://www.metz-connect.com/de/system/files/productfiles/Datenblatt_317031_RT10NxxHGLU_OFF-022897S.pdf, script-generated using https://github.com/pointhi/kicad-footprint-generator/scripts/TerminalBlock_MetzConnect
 THT terminal block Metz Connect Type703_RT10N02HGLU pitch 9.52mm size 19x12.5mm^2 drill 1.3mm pad 2.6mm
 0
 4
 3
-IK5PWC
+IK5PWC_footprint
 FTDI_module
 
 
 0
 24
 24
-IK5PWC
+IK5PWC_footprint
 Faston Male 90°
 https://www.amphenolrf.com/media/downloads/1769/132203-12.pdf
 SMA THT Female Jack Horizontal
 0
 4
 2
-IK5PWC
+IK5PWC_footprint
 HCS-LSP
 
 Curren hall sensor open loop
 0
 3
 3
-IK5PWC
+IK5PWC_footprint
 Mammooth_4mm
 terminal block Metz Connect Type703_RT10N02HGLU, 2 pins, pitch 9.52mm, size 19x12.5mm^2, drill diamater 1.3mm, pad diameter 2.6mm, see http://www.metz-connect.com/de/system/files/productfiles/Datenblatt_317031_RT10NxxHGLU_OFF-022897S.pdf, script-generated using https://github.com/pointhi/kicad-footprint-generator/scripts/TerminalBlock_MetzConnect
 THT terminal block Metz Connect Type703_RT10N02HGLU pitch 9.52mm size 19x12.5mm^2 drill 1.3mm pad 2.6mm
 0
 2
 2
-IK5PWC
+IK5PWC_footprint
 RJ45_Amphenol_54602-x08_Horizontal
 8 Pol Shallow Latch Connector, Modjack, RJ45 (https://cdn.amphenol-icc.com/media/wysiwyg/files/drawing/c-bmj-0102.pdf)
 RJ45
 0
 8
 8
-IK5PWC
+IK5PWC_footprint
 RJ45_Sneider
 https://www.amphenolrf.com/media/downloads/1769/132203-12.pdf
 SMA THT Female Jack Horizontal
 0
 8
 1
-IK5PWC
+IK5PWC_footprint
 Relay_DPDT_RY5W-K
 
 
 0
 8
 8
-IK5PWC
+IK5PWC_footprint
 Relay_SPDT_SANYOU_SRD_Series_Form_C
 relay Sanyou SRD series Form C http://www.sanyourelay.ca/public/products/pdf/SRD.pdf
 relay Sanyu SRD form C
 0
 5
 5
-IK5PWC
+IK5PWC_footprint
 Relay_SPDT_SONGLE_SRD_Series_Form_C
 relay Sanyou SRD series Form C http://www.sanyourelay.ca/public/products/pdf/SRD.pdf
 relay Sanyu SRD form C
 0
 5
 5
-IK5PWC
+IK5PWC_footprint
 Relay_SPDT_SONGLE_SRS_Series_Form
 
 relay SONGLE SRS form C
 0
 6
 6
-IK5PWC
+IK5PWC_footprint
 Switch_SPDT_panel
 
 switch SPDT
 0
 3
 3
-IK5PWC
+IK5PWC_footprint
 TO-247AC
 
 
 0
 3
 2
-IK5PWC
+IK5PWC_footprint
 TO-247AC_copy
 
 
 0
 3
 2
-IK5PWC
+IK5PWC_footprint
 VEGhA L08 12V dc
 Relay DPDT Schrack-RT2 RM5mm 16A 250V AC Form C http://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=RT2_reflow&DocType=DS&DocLang=EN
 Relay DPDT Schrack-RT2 RM5mm 16A 250V AC Relay
